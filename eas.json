@@ -5,10 +5,20 @@
     "build": {
       "development": {
         "developmentClient": true,
-        "distribution": "internal"
+        "distribution": "internal",
+        "env": {
+          "EXPO_PUBLIC_API_URL": "https://flat-mouse-55.deno.dev/graf",
+          "EXPO_PUBLIC_LOGIN_URL": "https://strong-dove-79.deno.dev/login?mobile=true",
+          "EXPO_PUBLIC_SIGNUP_URL": "https://strong-dove-79.deno.dev/signup?mobile=true"       
+        }
       },
       "preview": {
-        "distribution": "internal"
+        "distribution": "internal",
+        "env": {
+          "EXPO_PUBLIC_API_URL": "https://flat-mouse-55.deno.dev/graf",
+          "EXPO_PUBLIC_LOGIN_URL": "https://strong-dove-79.deno.dev/login?mobile=true",
+          "EXPO_PUBLIC_SIGNUP_URL": "https://strong-dove-79.deno.dev/signup?mobile=true"       
+        }
       },
       "production": {}
     },

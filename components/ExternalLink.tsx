@@ -1,6 +1,6 @@
+import * as Linking from 'expo-linking';
 import { Link } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
-import * as Linking from 'expo-linking';
 import React from 'react';
 import { Platform } from 'react-native';
 
@@ -17,11 +17,12 @@ export function ExternalLink(
         if (Platform.OS !== 'web') {
           // Prevent the default behavior of linking to the default browser on native.
           e.preventDefault();
-          // Uncomment below line to select link handler in android
-          // Linking.openURL(props.href);
           // Open the link in an in-app browser (works once link handler is selected - at least in android)
           WebBrowser.openBrowserAsync(props.href);
         }
+      }}
+      onLongPress={() => {
+        Linking.openURL(props.href);
       }}
     />
   );

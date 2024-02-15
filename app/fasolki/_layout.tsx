@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 import { useAppSelector } from '@/store/hooks';
-import { selectAuthToken } from '@/features/auth';
+import { selectAuthenticatedUserId } from '@/features/auth';
 
 export default function FasolkiScreen() {
-  const token = useAppSelector(selectAuthToken);
+  const userId = useAppSelector(selectAuthenticatedUserId);
 
   return <View style={styles.screen}>
     <View style={styles.info}>
-      <Text style={styles.infoText}>Token: {token}</Text>
+      <Text style={styles.infoText}>{userId}</Text>
     </View>
   </View>
 }

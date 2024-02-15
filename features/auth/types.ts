@@ -2,5 +2,9 @@ import { Status } from "../../types";
 
 export interface AuthState {
   status: Status;
-  token?: string;
+  token: string | null;
+}
+
+export interface JwtPayload {
+  sub: string;
 }

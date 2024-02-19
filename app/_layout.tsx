@@ -51,7 +51,7 @@ function RootLayoutNav() {
 
   return (
     <Provider store={store}>
-      <ThemeProvider value={DefaultTheme}>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack>
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="fasolki" options={{ headerShown: false }} />

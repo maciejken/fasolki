@@ -1,0 +1,35 @@
+interface Viewer {
+  id: ID!
+  firstName: String
+  lastName: String
+  email: String
+  phone: String
+  documents: [Document]!
+  groups: [Group]!
+}
+
+
+interface Document {
+  id: ID!
+  userId: ID!
+  type: String
+  title: String
+  content: String
+}
+
+interface Group {
+  id: ID!
+  name: String
+  adminIds: [String]!
+}
+
+enum AccessLevel {
+  None,
+  View,
+  Modify,
+  Manage,
+}
+
+type Query {
+  viewer: Viewer
+}

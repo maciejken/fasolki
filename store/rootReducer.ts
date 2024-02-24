@@ -1,10 +1,10 @@
 import { combineReducers } from "redux";
 import auth from "../features/auth";
-// import beans from "../features/beans";
+import documents from "@/features/documents";
 
 const rootReducer = combineReducers({
   auth,
-//   beans,
+  documents,
 });
 
 export default rootReducer;

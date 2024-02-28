@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<04556df9e494abb69d1e0c8628ac74c2>>
+ * @generated SignedSource<<23c2b1c5647a34ff0e0613645114de71>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,8 +16,18 @@ export type FasolkiQuery$data = {
       readonly content: string | null | undefined;
       readonly id: string;
       readonly title: string | null | undefined;
+      readonly type: string | null | undefined;
     } | null | undefined>;
     readonly email: string | null | undefined;
+    readonly groups: ReadonlyArray<{
+      readonly documents: ReadonlyArray<{
+        readonly content: string | null | undefined;
+        readonly id: string;
+        readonly title: string | null | undefined;
+        readonly type: string | null | undefined;
+      } | null | undefined>;
+      readonly id: string;
+    } | null | undefined>;
     readonly id: string;
   } | null | undefined;
 };
@@ -45,21 +55,59 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "title",
+  "name": "type",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "content",
+  "name": "title",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "content",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "concreteType": null,
+  "kind": "LinkedField",
+  "name": "documents",
+  "plural": true,
+  "selections": [
+    (v0/*: any*/),
+    (v2/*: any*/),
+    (v3/*: any*/),
+    (v4/*: any*/)
+  ],
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "__typename",
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "concreteType": null,
+  "kind": "LinkedField",
+  "name": "documents",
+  "plural": true,
+  "selections": [
+    (v6/*: any*/),
+    (v0/*: any*/),
+    (v2/*: any*/),
+    (v3/*: any*/),
+    (v4/*: any*/)
+  ],
   "storageKey": null
 };
 return {
@@ -79,17 +127,17 @@ return {
         "selections": [
           (v0/*: any*/),
           (v1/*: any*/),
+          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
             "concreteType": null,
             "kind": "LinkedField",
-            "name": "documents",
+            "name": "groups",
             "plural": true,
             "selections": [
               (v0/*: any*/),
-              (v2/*: any*/),
-              (v3/*: any*/)
+              (v5/*: any*/)
             ],
             "storageKey": null
           }
@@ -114,21 +162,21 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v4/*: any*/),
+          (v6/*: any*/),
           (v0/*: any*/),
           (v1/*: any*/),
+          (v7/*: any*/),
           {
             "alias": null,
             "args": null,
             "concreteType": null,
             "kind": "LinkedField",
-            "name": "documents",
+            "name": "groups",
             "plural": true,
             "selections": [
-              (v4/*: any*/),
+              (v6/*: any*/),
               (v0/*: any*/),
-              (v2/*: any*/),
-              (v3/*: any*/)
+              (v7/*: any*/)
             ],
             "storageKey": null
           }
@@ -138,16 +186,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "2a1adc956f72e059be71f46b946ac2b2",
+    "cacheID": "8a5d9e29e52f2ab811fda2f8f42799c4",
     "id": null,
     "metadata": {},
     "name": "FasolkiQuery",
     "operationKind": "query",
-    "text": "query FasolkiQuery {\n  viewer {\n    __typename\n    id\n    email\n    documents {\n      __typename\n      id\n      title\n      content\n    }\n  }\n}\n"
+    "text": "query FasolkiQuery {\n  viewer {\n    __typename\n    id\n    email\n    documents {\n      __typename\n      id\n      type\n      title\n      content\n    }\n    groups {\n      __typename\n      id\n      documents {\n        __typename\n        id\n        type\n        title\n        content\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "cc58a95e006045ff782fc739b999b509";
+(node as any).hash = "a933e110c4cb2945dfcfd4a572972679";
 
 export default node;

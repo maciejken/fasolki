@@ -1,7 +1,7 @@
 import * as React from "react";
 import { graphql } from "relay-runtime";
 import { useLazyLoadQuery } from "react-relay";
-import { StyleSheet, Text, View } from "react-native";
+import { Button, FlatList, StyleSheet, Text, View } from "react-native";
 import type { FasolkiQuery as FasolkiQueryType } from './__generated__/FasolkiQuery.graphql';
 
 const FasolkiQuery = graphql`
@@ -11,25 +11,75 @@ const FasolkiQuery = graphql`
       email
       documents {
         id
+        type
         title
         content
+      }
+      groups {
+        id
+        documents {
+          id
+          type
+          title
+          content
+        }
       }
     }
   }
 `;
 
+interface Document {
+  type: string;
+  title: string;
+  content: string;
+}
+
+interface FasolkiProps {
+  queryRef: any;
+  refresh: () => void;
+}
+
+const getTypeFilter = (type: string) => (d: any) => d?.type === type;
+
 export default function Fasolki() {
+  const [fetchKey, setFetchKey] = React.useState(0);
+
   let data = useLazyLoadQuery<FasolkiQueryType>(
     FasolkiQuery,
-    {}
+    {},
+    { fetchKey, fetchPolicy: 'network-only' },
   );
 
-  const email = data.viewer.email;
+  const refresh = React.useCallback(() => {
+    setFetchKey(prev => prev + 1)
+  }, []);
+
+  const userDocuments = data.viewer?.documents.filter(getTypeFilter('counter')) || [];
+  const groups = data.viewer?.groups || [];
+  let groupDocuments: any[] = [];
+
+  for (const g of groups) {
+    if (g?.documents.length) {
+      groupDocuments = [...groupDocuments, ...g.documents.filter(getTypeFilter('counter'))];
+    }
+  }
+
+  const fasolki = [...userDocuments, ...groupDocuments];
+
+  const renderCounter = ({ item }: any) => (
+    <View style={styles.counter}>
+      <Text style={styles.counterTitle}>{item.title}</Text>
+      <Text style={styles.counterContent}>{item.content}</Text>
+    </View>
+  );
 
   return (
     <View style={styles.screen}>
-      <View style={styles.info}>
-        <Text style={styles.infoText}>{email || 'loading...'}</Text>
+      <View style={styles.list}>
+        <FlatList data={fasolki} renderItem={renderCounter} />
+      </View>
+      <View>
+        <Button title="Odśwież" onPress={refresh} />
       </View>
     </View>
   );
@@ -42,14 +92,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  info: {
+  list: {
     paddingVertical: 12,
     marginVertical: 12,
     width: 300,
     backgroundColor: 'white',
     justifyContent: 'center'
   },
-  infoText: {
-    fontSize: 24,
+  counter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 12,
+    paddingHorizontal: 12
   },
+  counterTitle: {
+    fontSize: 16,
+  },
+  counterContent: {
+    fontSize: 24,
+  }
 });

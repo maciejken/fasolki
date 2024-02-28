@@ -21,6 +21,7 @@ interface Group {
   id: ID!
   name: String
   adminIds: [String]!
+  documents: [Document]!
 }
 
 enum AccessLevel {

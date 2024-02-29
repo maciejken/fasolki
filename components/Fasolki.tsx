@@ -1,8 +1,10 @@
 import * as React from "react";
 import { graphql } from "relay-runtime";
-import { useLazyLoadQuery } from "react-relay";
-import { Button, FlatList, StyleSheet, Text, View } from "react-native";
+import { useLazyLoadQuery, useRelayEnvironment } from "react-relay";
+import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import type { FasolkiQuery as FasolkiQueryType } from './__generated__/FasolkiQuery.graphql';
+import { fetchQuery } from "relay-runtime";
+import Counter from "./Counter";
 
 const FasolkiQuery = graphql`
   query FasolkiQuery {
@@ -28,30 +30,42 @@ const FasolkiQuery = graphql`
   }
 `;
 
-interface Document {
-  type: string;
-  title: string;
-  content: string;
-}
-
-interface FasolkiProps {
-  queryRef: any;
-  refresh: () => void;
-}
-
 const getTypeFilter = (type: string) => (d: any) => d?.type === type;
 
 export default function Fasolki() {
   const [fetchKey, setFetchKey] = React.useState(0);
+  const [refreshing, setRefreshing] = React.useState(false);
+  const environment = useRelayEnvironment();
 
   let data = useLazyLoadQuery<FasolkiQueryType>(
     FasolkiQuery,
     {},
-    { fetchKey, fetchPolicy: 'network-only' },
+    { fetchKey, fetchPolicy: `${fetchKey ? 'network' : 'store'}-only` },
   );
 
   const refresh = React.useCallback(() => {
-    setFetchKey(prev => prev + 1)
+    if (refreshing) {
+      return;
+    }
+
+    setRefreshing(true);
+
+    fetchQuery(environment, FasolkiQuery, {})
+      .subscribe({
+        complete: () => {
+          setRefreshing(false);
+          setFetchKey(prev => prev + 1);
+        },
+        error: () => {
+          setRefreshing(false);
+        }
+      });
+  }, [fetchKey]);
+
+  React.useEffect(() => {
+    if (!fetchKey) {
+      refresh();
+    }
   }, []);
 
   const userDocuments = data.viewer?.documents.filter(getTypeFilter('counter')) || [];
@@ -67,19 +81,24 @@ export default function Fasolki() {
   const fasolki = [...userDocuments, ...groupDocuments];
 
   const renderCounter = ({ item }: any) => (
-    <View style={styles.counter}>
-      <Text style={styles.counterTitle}>{item.title}</Text>
-      <Text style={styles.counterContent}>{item.content}</Text>
-    </View>
+    <Counter
+      id={item.id}
+      type={item.type}
+      title={item.title}
+      content={item.content}
+    />
   );
+
+  const refreshControl = <RefreshControl refreshing={refreshing} onRefresh={refresh} />;
 
   return (
     <View style={styles.screen}>
       <View style={styles.list}>
-        <FlatList data={fasolki} renderItem={renderCounter} />
-      </View>
-      <View>
-        <Button title="Odśwież" onPress={refresh} />
+        <FlatList
+          data={fasolki}
+          renderItem={renderCounter}
+          refreshControl={refreshControl}
+        />
       </View>
     </View>
   );
@@ -89,27 +108,15 @@ export default function Fasolki() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
+    marginTop: 18
   },
   list: {
     paddingVertical: 12,
     marginVertical: 12,
-    width: 300,
+    flexGrow: 1,
     backgroundColor: 'white',
     justifyContent: 'center'
   },
-  counter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginVertical: 12,
-    paddingHorizontal: 12
-  },
-  counterTitle: {
-    fontSize: 16,
-  },
-  counterContent: {
-    fontSize: 24,
-  }
 });

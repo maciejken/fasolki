@@ -26,7 +26,15 @@ const getFetchFn = (token: string): FetchFunction => (params, variables) => {
     }),
   });
 
-  return Observable.from(response.then((data) => data.json()));
+  const data = Observable.from(response.then(async (data) => {
+    const json = await data.json();
+    if (process.env.EXPO_PUBLIC_LOG_LEVEL === "debug") {
+      console.debug("relay/environment.ts:", JSON.stringify(json));
+    }
+    return json;
+  }));
+
+  return data;
 };
 
 export function createEnvironment(token: string): IEnvironment {

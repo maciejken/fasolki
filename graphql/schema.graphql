@@ -15,12 +15,14 @@ interface Document {
   type: String
   title: String
   content: String
+  accessLevel: AccessLevel
 }
 
 interface Group {
   id: ID!
   name: String
   adminIds: [String]!
+  documents: [Document]!
 }
 
 enum AccessLevel {
@@ -32,4 +34,8 @@ enum AccessLevel {
 
 type Query {
   viewer: Viewer
+}
+
+type Mutation {
+  updateDocument(id: String!, title: String, content: String): Document
 }

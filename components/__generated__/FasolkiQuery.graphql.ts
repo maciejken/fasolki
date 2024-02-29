@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<04556df9e494abb69d1e0c8628ac74c2>>
+ * @generated SignedSource<<f2b7db73a0d354cee493afcc0eeefbec>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,15 +9,28 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Query } from 'relay-runtime';
+export type AccessLevel = "Manage" | "Modify" | "None" | "View" | "%future added value";
 export type FasolkiQuery$variables = Record<PropertyKey, never>;
 export type FasolkiQuery$data = {
   readonly viewer: {
     readonly documents: ReadonlyArray<{
+      readonly accessLevel: AccessLevel | null | undefined;
       readonly content: string | null | undefined;
       readonly id: string;
       readonly title: string | null | undefined;
+      readonly type: string | null | undefined;
     } | null | undefined>;
     readonly email: string | null | undefined;
+    readonly groups: ReadonlyArray<{
+      readonly documents: ReadonlyArray<{
+        readonly accessLevel: AccessLevel | null | undefined;
+        readonly content: string | null | undefined;
+        readonly id: string;
+        readonly title: string | null | undefined;
+        readonly type: string | null | undefined;
+      } | null | undefined>;
+      readonly id: string;
+    } | null | undefined>;
     readonly id: string;
   } | null | undefined;
 };
@@ -45,21 +58,68 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "title",
+  "name": "type",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "content",
+  "name": "title",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "content",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "accessLevel",
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "concreteType": null,
+  "kind": "LinkedField",
+  "name": "documents",
+  "plural": true,
+  "selections": [
+    (v0/*: any*/),
+    (v2/*: any*/),
+    (v3/*: any*/),
+    (v4/*: any*/),
+    (v5/*: any*/)
+  ],
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "__typename",
+  "storageKey": null
+},
+v8 = {
+  "alias": null,
+  "args": null,
+  "concreteType": null,
+  "kind": "LinkedField",
+  "name": "documents",
+  "plural": true,
+  "selections": [
+    (v7/*: any*/),
+    (v0/*: any*/),
+    (v2/*: any*/),
+    (v3/*: any*/),
+    (v4/*: any*/),
+    (v5/*: any*/)
+  ],
   "storageKey": null
 };
 return {
@@ -79,17 +139,17 @@ return {
         "selections": [
           (v0/*: any*/),
           (v1/*: any*/),
+          (v6/*: any*/),
           {
             "alias": null,
             "args": null,
             "concreteType": null,
             "kind": "LinkedField",
-            "name": "documents",
+            "name": "groups",
             "plural": true,
             "selections": [
               (v0/*: any*/),
-              (v2/*: any*/),
-              (v3/*: any*/)
+              (v6/*: any*/)
             ],
             "storageKey": null
           }
@@ -114,21 +174,21 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v4/*: any*/),
+          (v7/*: any*/),
           (v0/*: any*/),
           (v1/*: any*/),
+          (v8/*: any*/),
           {
             "alias": null,
             "args": null,
             "concreteType": null,
             "kind": "LinkedField",
-            "name": "documents",
+            "name": "groups",
             "plural": true,
             "selections": [
-              (v4/*: any*/),
+              (v7/*: any*/),
               (v0/*: any*/),
-              (v2/*: any*/),
-              (v3/*: any*/)
+              (v8/*: any*/)
             ],
             "storageKey": null
           }
@@ -138,16 +198,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "2a1adc956f72e059be71f46b946ac2b2",
+    "cacheID": "55cc48825ed1314e6ef704bccabbf05a",
     "id": null,
     "metadata": {},
     "name": "FasolkiQuery",
     "operationKind": "query",
-    "text": "query FasolkiQuery {\n  viewer {\n    __typename\n    id\n    email\n    documents {\n      __typename\n      id\n      title\n      content\n    }\n  }\n}\n"
+    "text": "query FasolkiQuery {\n  viewer {\n    __typename\n    id\n    email\n    documents {\n      __typename\n      id\n      type\n      title\n      content\n      accessLevel\n    }\n    groups {\n      __typename\n      id\n      documents {\n        __typename\n        id\n        type\n        title\n        content\n        accessLevel\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "cc58a95e006045ff782fc739b999b509";
+(node as any).hash = "0813b9b9cc21349058a786c4a416dbc6";
 
 export default node;

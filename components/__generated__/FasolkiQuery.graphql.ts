@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<23c2b1c5647a34ff0e0613645114de71>>
+ * @generated SignedSource<<f2b7db73a0d354cee493afcc0eeefbec>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,10 +9,12 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Query } from 'relay-runtime';
+export type AccessLevel = "Manage" | "Modify" | "None" | "View" | "%future added value";
 export type FasolkiQuery$variables = Record<PropertyKey, never>;
 export type FasolkiQuery$data = {
   readonly viewer: {
     readonly documents: ReadonlyArray<{
+      readonly accessLevel: AccessLevel | null | undefined;
       readonly content: string | null | undefined;
       readonly id: string;
       readonly title: string | null | undefined;
@@ -21,6 +23,7 @@ export type FasolkiQuery$data = {
     readonly email: string | null | undefined;
     readonly groups: ReadonlyArray<{
       readonly documents: ReadonlyArray<{
+        readonly accessLevel: AccessLevel | null | undefined;
         readonly content: string | null | undefined;
         readonly id: string;
         readonly title: string | null | undefined;
@@ -75,6 +78,13 @@ v4 = {
 v5 = {
   "alias": null,
   "args": null,
+  "kind": "ScalarField",
+  "name": "accessLevel",
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
   "concreteType": null,
   "kind": "LinkedField",
   "name": "documents",
@@ -83,18 +93,19 @@ v5 = {
     (v0/*: any*/),
     (v2/*: any*/),
     (v3/*: any*/),
-    (v4/*: any*/)
+    (v4/*: any*/),
+    (v5/*: any*/)
   ],
   "storageKey": null
 },
-v6 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "concreteType": null,
@@ -102,11 +113,12 @@ v7 = {
   "name": "documents",
   "plural": true,
   "selections": [
-    (v6/*: any*/),
+    (v7/*: any*/),
     (v0/*: any*/),
     (v2/*: any*/),
     (v3/*: any*/),
-    (v4/*: any*/)
+    (v4/*: any*/),
+    (v5/*: any*/)
   ],
   "storageKey": null
 };
@@ -127,7 +139,7 @@ return {
         "selections": [
           (v0/*: any*/),
           (v1/*: any*/),
-          (v5/*: any*/),
+          (v6/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -137,7 +149,7 @@ return {
             "plural": true,
             "selections": [
               (v0/*: any*/),
-              (v5/*: any*/)
+              (v6/*: any*/)
             ],
             "storageKey": null
           }
@@ -162,10 +174,10 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v6/*: any*/),
+          (v7/*: any*/),
           (v0/*: any*/),
           (v1/*: any*/),
-          (v7/*: any*/),
+          (v8/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -174,9 +186,9 @@ return {
             "name": "groups",
             "plural": true,
             "selections": [
-              (v6/*: any*/),
+              (v7/*: any*/),
               (v0/*: any*/),
-              (v7/*: any*/)
+              (v8/*: any*/)
             ],
             "storageKey": null
           }
@@ -186,16 +198,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "8a5d9e29e52f2ab811fda2f8f42799c4",
+    "cacheID": "55cc48825ed1314e6ef704bccabbf05a",
     "id": null,
     "metadata": {},
     "name": "FasolkiQuery",
     "operationKind": "query",
-    "text": "query FasolkiQuery {\n  viewer {\n    __typename\n    id\n    email\n    documents {\n      __typename\n      id\n      type\n      title\n      content\n    }\n    groups {\n      __typename\n      id\n      documents {\n        __typename\n        id\n        type\n        title\n        content\n      }\n    }\n  }\n}\n"
+    "text": "query FasolkiQuery {\n  viewer {\n    __typename\n    id\n    email\n    documents {\n      __typename\n      id\n      type\n      title\n      content\n      accessLevel\n    }\n    groups {\n      __typename\n      id\n      documents {\n        __typename\n        id\n        type\n        title\n        content\n        accessLevel\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a933e110c4cb2945dfcfd4a572972679";
+(node as any).hash = "0813b9b9cc21349058a786c4a416dbc6";
 
 export default node;

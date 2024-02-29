@@ -16,6 +16,7 @@ const FasolkiQuery = graphql`
         type
         title
         content
+        accessLevel
       }
       groups {
         id
@@ -24,6 +25,7 @@ const FasolkiQuery = graphql`
           type
           title
           content
+          accessLevel
         }
       }
     }
@@ -69,12 +71,18 @@ export default function Fasolki() {
   }, []);
 
   const userDocuments = data.viewer?.documents.filter(getTypeFilter('counter')) || [];
+  const userDocumentIds = userDocuments.map(d => d?.id).filter(Boolean);
   const groups = data.viewer?.groups || [];
   let groupDocuments: any[] = [];
 
   for (const g of groups) {
     if (g?.documents.length) {
-      groupDocuments = [...groupDocuments, ...g.documents.filter(getTypeFilter('counter'))];
+      groupDocuments = [
+        ...groupDocuments,
+        ...g.documents
+          .filter(d => !userDocumentIds.includes(d?.id))
+          .filter(getTypeFilter('counter'))
+      ];
     }
   }
 
@@ -86,6 +94,7 @@ export default function Fasolki() {
       type={item.type}
       title={item.title}
       content={item.content}
+      accessLevel={item.accessLevel}
     />
   );
 

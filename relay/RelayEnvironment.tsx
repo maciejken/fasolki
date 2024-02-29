@@ -25,7 +25,7 @@ export default function RelayEnvironment({
   }
 
   return (
-    <RelayEnvironmentProvider environment={environment}>
+    <RelayEnvironmentProvider environment={environment!}>
       {children}
     </RelayEnvironmentProvider>
   );

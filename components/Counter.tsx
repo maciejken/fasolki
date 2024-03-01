@@ -2,10 +2,21 @@ import React from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { graphql } from "relay-runtime";
-import { useMutation } from "react-relay";
+import { useFragment, useMutation } from "react-relay";
+import { CounterDocumentFragment$key } from "./__generated__/CounterDocumentFragment.graphql";
 
-const CounterMutation = graphql`
-  mutation CounterMutation(
+const CounterDocumentFragment = graphql`
+  fragment CounterDocumentFragment on Document {
+    id
+    type
+    title
+    content
+    accessLevel
+  }
+`;
+
+const CounterUpdateMutation = graphql`
+  mutation CounterUpdateMutation(
     $id: String!
     $title: String
     $content: String
@@ -15,19 +26,13 @@ const CounterMutation = graphql`
       title: $title,
       content: $content
     ) {
-      id
-      title
-      content
+      ...CounterDocumentFragment
     }
   }
 `;
 
 interface CounterProps {
-  id: string;
-  type: string;
-  title: string;
-  content: string;
-  accessLevel: number;
+  document: CounterDocumentFragment$key;
 }
 
 const getIconColor = (enabled: boolean) => enabled ? 'black' : 'white';
@@ -39,13 +44,17 @@ const getFirstIcon = (canSave: boolean, loading: boolean) => {
   return canSave ? "save-outline" : "pencil-outline"
 }
 
-export default function Counter({ id, title, content, accessLevel }: CounterProps) {
-  const [commitMutation, isMutationInFlight] = useMutation(CounterMutation);
-  const [counterTitle, setCounterTitle] = React.useState(title);
+export default function Counter({
+  document,
+}: CounterProps) {
+  const { id, title, content, accessLevel } = useFragment(CounterDocumentFragment, document)
+  const [commitMutation, isMutationInFlight] = useMutation(CounterUpdateMutation);
+  const [counterTitle, setCounterTitle] = React.useState(title || "");
   const [counterContent, setCounterContent] = React.useState(content);
   const [canSave, setCanSave] = React.useState(false);
-  const [canEdit, canShare] = [accessLevel > 1, accessLevel > 2];
-  const shouldShowShareIcon = !(isMutationInFlight || canSave) && canShare;
+  const [canEdit, canShare] = [(accessLevel ?? 0) > 1, (accessLevel ?? 0) > 2];
+  const loading = isMutationInFlight;
+  const shouldShowShareIcon = !(loading || canSave) && canShare;
 
   const handlePressIn = () => {
     if (canEdit) {
@@ -53,7 +62,7 @@ export default function Counter({ id, title, content, accessLevel }: CounterProp
     }
   }
 
-  const handleSubmit = () => {
+  const handleSubmitUpdate = () => {
     if (canSave) {
       commitMutation({
         variables: {
@@ -76,7 +85,7 @@ export default function Counter({ id, title, content, accessLevel }: CounterProp
           inputMode="text"
           onChangeText={setCounterTitle}
           onPressIn={handlePressIn}
-          onSubmitEditing={handleSubmit}
+          onSubmitEditing={handleSubmitUpdate}
         />
         <TextInput
           value={counterContent}
@@ -85,7 +94,7 @@ export default function Counter({ id, title, content, accessLevel }: CounterProp
           inputMode="numeric"
           onChangeText={setCounterContent}
           onPressIn={handlePressIn}
-          onSubmitEditing={handleSubmit}
+          onSubmitEditing={handleSubmitUpdate}
         />
       </View>
       <View style={styles.actions}>
@@ -93,18 +102,7 @@ export default function Counter({ id, title, content, accessLevel }: CounterProp
           name={getFirstIcon(canSave, isMutationInFlight)}
           size={24}
           color={getIconColor(canEdit)}
-          onPress={() => {
-            if (canSave) {
-              commitMutation({
-                variables: {
-                  id,
-                  title: counterTitle,
-                  content: counterContent
-                }
-              })
-              setCanSave(false);
-            }
-          }}
+          onPress={handleSubmitUpdate}
         />
         <Ionicons
           name="share-social-outline"

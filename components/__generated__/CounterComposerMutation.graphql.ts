@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f1c6d6b48342654c9aec0362127aff5c>>
+ * @generated SignedSource<<c68533995ebb1dc72d14456b1726f9a6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,21 +9,20 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-export type CounterMutation$variables = {
-  content?: string | null | undefined;
-  id: string;
+import { FragmentRefs } from "relay-runtime";
+export type CounterComposerMutation$variables = {
+  content: string;
   title?: string | null | undefined;
+  type: string;
 };
-export type CounterMutation$data = {
-  readonly updateDocument: {
-    readonly content: string | null | undefined;
-    readonly id: string;
-    readonly title: string | null | undefined;
+export type CounterComposerMutation$data = {
+  readonly addDocument: {
+    readonly " $fragmentSpreads": FragmentRefs<"CounterComposerFragment">;
   } | null | undefined;
 };
-export type CounterMutation = {
-  response: CounterMutation$data;
-  variables: CounterMutation$variables;
+export type CounterComposerMutation = {
+  response: CounterComposerMutation$data;
+  variables: CounterComposerMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -35,12 +34,12 @@ var v0 = {
 v1 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "id"
+  "name": "title"
 },
 v2 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "title"
+  "name": "type"
 },
 v3 = [
   {
@@ -50,36 +49,15 @@ v3 = [
   },
   {
     "kind": "Variable",
-    "name": "id",
-    "variableName": "id"
+    "name": "title",
+    "variableName": "title"
   },
   {
     "kind": "Variable",
-    "name": "title",
-    "variableName": "title"
+    "name": "type",
+    "variableName": "type"
   }
-],
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "title",
-  "storageKey": null
-},
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "content",
-  "storageKey": null
-};
+];
 return {
   "fragment": {
     "argumentDefinitions": [
@@ -89,19 +67,21 @@ return {
     ],
     "kind": "Fragment",
     "metadata": null,
-    "name": "CounterMutation",
+    "name": "CounterComposerMutation",
     "selections": [
       {
         "alias": null,
         "args": (v3/*: any*/),
         "concreteType": null,
         "kind": "LinkedField",
-        "name": "updateDocument",
+        "name": "addDocument",
         "plural": false,
         "selections": [
-          (v4/*: any*/),
-          (v5/*: any*/),
-          (v6/*: any*/)
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "CounterComposerFragment"
+          }
         ],
         "storageKey": null
       }
@@ -112,19 +92,19 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v1/*: any*/),
       (v2/*: any*/),
+      (v1/*: any*/),
       (v0/*: any*/)
     ],
     "kind": "Operation",
-    "name": "CounterMutation",
+    "name": "CounterComposerMutation",
     "selections": [
       {
         "alias": null,
         "args": (v3/*: any*/),
         "concreteType": null,
         "kind": "LinkedField",
-        "name": "updateDocument",
+        "name": "addDocument",
         "plural": false,
         "selections": [
           {
@@ -134,25 +114,33 @@ return {
             "name": "__typename",
             "storageKey": null
           },
-          (v4/*: any*/),
-          (v5/*: any*/),
-          (v6/*: any*/)
+          {
+            "kind": "TypeDiscriminator",
+            "abstractKey": "__isDocument"
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          }
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "317041b2c23e2c8497b19c1b18189d1b",
+    "cacheID": "2aab0e044c9ef8d9807e2b99795ac109",
     "id": null,
     "metadata": {},
-    "name": "CounterMutation",
+    "name": "CounterComposerMutation",
     "operationKind": "mutation",
-    "text": "mutation CounterMutation(\n  $id: String!\n  $title: String\n  $content: String\n) {\n  updateDocument(id: $id, title: $title, content: $content) {\n    __typename\n    id\n    title\n    content\n  }\n}\n"
+    "text": "mutation CounterComposerMutation(\n  $type: String!\n  $title: String\n  $content: String!\n) {\n  addDocument(type: $type, title: $title, content: $content) {\n    __typename\n    ...CounterComposerFragment\n    id\n  }\n}\n\nfragment CounterComposerFragment on Document {\n  __isDocument: __typename\n  id\n}\n"
   }
 };
 })();
 
-(node as any).hash = "fd6abce712d4aa38743e97c9b048a83d";
+(node as any).hash = "7c4779d826b67c99a2cbe6332c40d5e2";
 
 export default node;

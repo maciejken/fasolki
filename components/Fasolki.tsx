@@ -1,33 +1,27 @@
 import * as React from "react";
 import { graphql } from "relay-runtime";
-import { useLazyLoadQuery, useRelayEnvironment } from "react-relay";
-import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
+import { useFragment, useLazyLoadQuery, useRelayEnvironment } from "react-relay";
+import { Button, FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import type { FasolkiQuery as FasolkiQueryType } from './__generated__/FasolkiQuery.graphql';
 import { fetchQuery } from "relay-runtime";
 import Counter from "./Counter";
+import CounterComposer from "./CounterComposer";
+import { FasolkiViewerFragment$data } from "./__generated__/FasolkiViewerFragment.graphql";
+
+const FasolkiViewerFragment = graphql`
+  fragment FasolkiViewerFragment on Viewer {
+    id
+    firstName
+    documents {
+      ...CounterDocumentFragment       
+    }
+  }
+`;
 
 const FasolkiQuery = graphql`
   query FasolkiQuery {
     viewer {
-      id
-      email
-      documents {
-        id
-        type
-        title
-        content
-        accessLevel
-      }
-      groups {
-        id
-        documents {
-          id
-          type
-          title
-          content
-          accessLevel
-        }
-      }
+      ...FasolkiViewerFragment
     }
   }
 `;
@@ -37,6 +31,7 @@ const getTypeFilter = (type: string) => (d: any) => d?.type === type;
 export default function Fasolki() {
   const [fetchKey, setFetchKey] = React.useState(0);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [creating, setCreating] = React.useState(false);
   const environment = useRelayEnvironment();
 
   let data = useLazyLoadQuery<FasolkiQueryType>(
@@ -70,33 +65,9 @@ export default function Fasolki() {
     }
   }, []);
 
-  const userDocuments = data.viewer?.documents.filter(getTypeFilter('counter')) || [];
-  const userDocumentIds = userDocuments.map(d => d?.id).filter(Boolean);
-  const groups = data.viewer?.groups || [];
-  let groupDocuments: any[] = [];
+  const viewer = useFragment(FasolkiViewerFragment, data.viewer) as FasolkiViewerFragment$data;
 
-  for (const g of groups) {
-    if (g?.documents.length) {
-      groupDocuments = [
-        ...groupDocuments,
-        ...g.documents
-          .filter(d => !userDocumentIds.includes(d?.id))
-          .filter(getTypeFilter('counter'))
-      ];
-    }
-  }
-
-  const fasolki = [...userDocuments, ...groupDocuments];
-
-  const renderCounter = ({ item }: any) => (
-    <Counter
-      id={item.id}
-      type={item.type}
-      title={item.title}
-      content={item.content}
-      accessLevel={item.accessLevel}
-    />
-  );
+  const renderCounter = ({ item }: any) => <Counter document={item} />
 
   const refreshControl = <RefreshControl refreshing={refreshing} onRefresh={refresh} />;
 
@@ -104,10 +75,14 @@ export default function Fasolki() {
     <View style={styles.screen}>
       <View style={styles.list}>
         <FlatList
-          data={fasolki}
+          data={viewer.documents}
           renderItem={renderCounter}
           refreshControl={refreshControl}
         />
+        {/* {creating && <CounterComposer />}
+        {!creating && <Button title="Dodaj" onPress={() => {
+          setCreating(true);
+        }} />} */}
       </View>
     </View>
   );
@@ -119,12 +94,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    marginTop: 18
+    marginTop: 18,
   },
   list: {
     paddingVertical: 12,
     marginVertical: 12,
-    flexGrow: 1,
+    width: '100%',
     backgroundColor: 'white',
     justifyContent: 'center'
   },

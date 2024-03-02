@@ -73,16 +73,22 @@ export default function Fasolki() {
 
   return (
     <View style={styles.screen}>
-      <View style={styles.list}>
+      <View style={styles.listContainer}>
         <FlatList
-          data={viewer.documents}
+          data={viewer?.documents || []}
           renderItem={renderCounter}
           refreshControl={refreshControl}
         />
-        {/* {creating && <CounterComposer />}
-        {!creating && <Button title="Dodaj" onPress={() => {
-          setCreating(true);
-        }} />} */}
+        {creating && <CounterComposer onExit={() => {
+          setCreating(false);
+        }} />}
+        {!creating && (
+          <View style={styles.actionCreate}>
+            <Button title="Dodaj" onPress={() => {
+              setCreating(true);
+            }} />
+          </View>
+        )}
       </View>
     </View>
   );
@@ -92,15 +98,20 @@ export default function Fasolki() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
+    marginTop: 24,
+    backgroundColor: 'white'
+  },
+  listContainer: {
+    width: '100%',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    marginTop: 18,
+    marginBottom: 48,
   },
   list: {
-    paddingVertical: 12,
-    marginVertical: 12,
-    width: '100%',
-    backgroundColor: 'white',
-    justifyContent: 'center'
+    justifyContent: 'flex-start'
   },
+  actionCreate: {
+    width: 100,
+    marginBottom: 24,
+  }
 });

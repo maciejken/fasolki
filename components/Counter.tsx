@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createRef } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { graphql } from "relay-runtime";
@@ -37,11 +37,16 @@ interface CounterProps {
 
 const getIconColor = (enabled: boolean) => enabled ? 'black' : 'white';
 
-const getFirstIcon = (canSave: boolean, loading: boolean) => {
+const getIcon = (canEdit: boolean, canSave: boolean, loading: boolean) => {
   if (loading) {
     return "time-outline";
   }
-  return canSave ? "save-outline" : "pencil-outline"
+
+  if (!canEdit) {
+    return "lock-closed-outline"
+  }
+
+  return canSave ? "save-outline" : "ellipsis-vertical-outline"
 }
 
 export default function Counter({
@@ -53,13 +58,23 @@ export default function Counter({
   const [counterContent, setCounterContent] = React.useState(content);
   const [canSave, setCanSave] = React.useState(false);
   const [canEdit, canShare] = [(accessLevel ?? 0) > 1, (accessLevel ?? 0) > 2];
-  const loading = isMutationInFlight;
-  const shouldShowShareIcon = !(loading || canSave) && canShare;
+  const contentInputRef = createRef<TextInput>();
+  const shouldShowShareIcon = !(isMutationInFlight || canSave) && canShare;
 
-  const handlePressIn = () => {
-    if (canEdit) {
-      setCanSave(true);
-    }
+  const handleInputTitle = (value: string) => {
+    setCounterTitle(value);
+    setCanSave(!!counterContent);
+  };
+
+  const handleInputContent = (value: string) => {
+    setCounterContent(value);
+    setCanSave(!!value);
+  };
+
+  const handleSubmitTitle = () => {
+    contentInputRef.current?.focus();
+    const end = counterTitle.length;
+    contentInputRef.current?.setSelection(end, end);
   }
 
   const handleSubmitUpdate = () => {
@@ -83,31 +98,26 @@ export default function Counter({
           style={styles.counterTitle}
           editable={canEdit}
           inputMode="text"
-          onChangeText={setCounterTitle}
-          onPressIn={handlePressIn}
-          onSubmitEditing={handleSubmitUpdate}
+          onChangeText={handleInputTitle}
+          onSubmitEditing={handleSubmitTitle}
+          enterKeyHint="next"
         />
         <TextInput
+          ref={contentInputRef}
           value={counterContent}
           style={styles.counterContent}
           editable={canEdit}
           inputMode="numeric"
-          onChangeText={setCounterContent}
-          onPressIn={handlePressIn}
+          onChangeText={handleInputContent}
           onSubmitEditing={handleSubmitUpdate}
+          enterKeyHint="done"
         />
       </View>
       <View style={styles.actions}>
         <Ionicons
-          name={getFirstIcon(canSave, isMutationInFlight)}
+          name={getIcon(canEdit, canSave, isMutationInFlight)}
           size={24}
-          color={getIconColor(canEdit)}
-          onPress={handleSubmitUpdate}
-        />
-        <Ionicons
-          name="share-social-outline"
-          size={24}
-          color={getIconColor(shouldShowShareIcon)}
+          color={canEdit ? 'black' : '#aaa'}
         />
       </View>
     </View>
@@ -139,6 +149,6 @@ const styles = StyleSheet.create({
   actions: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: 64
+    // width: 32
   }
 });

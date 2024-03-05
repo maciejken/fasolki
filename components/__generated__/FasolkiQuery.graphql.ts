@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<327b4281f275bd7c440a184f0485d577>>
+ * @generated SignedSource<<297456b960ed38ae68478ff83fac020f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -35,7 +35,14 @@ v1 = {
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
-};
+},
+v2 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 10
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": [],
@@ -92,48 +99,107 @@ return {
           },
           {
             "alias": null,
-            "args": null,
-            "concreteType": null,
+            "args": (v2/*: any*/),
+            "concreteType": "DocumentsConnection",
             "kind": "LinkedField",
             "name": "documents",
-            "plural": true,
+            "plural": false,
             "selections": [
-              (v0/*: any*/),
-              {
-                "kind": "TypeDiscriminator",
-                "abstractKey": "__isDocument"
-              },
-              (v1/*: any*/),
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "type",
+                "concreteType": "DocumentsConnectionEdge",
+                "kind": "LinkedField",
+                "name": "edges",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Document",
+                    "kind": "LinkedField",
+                    "name": "node",
+                    "plural": false,
+                    "selections": [
+                      (v1/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "type",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "title",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "content",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "accessLevel",
+                        "storageKey": null
+                      },
+                      (v0/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "cursor",
+                    "storageKey": null
+                  }
+                ],
                 "storageKey": null
               },
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "title",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "content",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "accessLevel",
+                "concreteType": "PageInfo",
+                "kind": "LinkedField",
+                "name": "pageInfo",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "endCursor",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "hasNextPage",
+                    "storageKey": null
+                  }
+                ],
                 "storageKey": null
               }
             ],
-            "storageKey": null
+            "storageKey": "documents(first:10)"
+          },
+          {
+            "alias": null,
+            "args": (v2/*: any*/),
+            "filters": null,
+            "handle": "connection",
+            "key": "FasolkiViewerFragment_documents",
+            "kind": "LinkedHandle",
+            "name": "documents"
           }
         ],
         "storageKey": null
@@ -141,12 +207,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "447a4cf7d3acaa9f9b44089484da733c",
+    "cacheID": "5c8ab462136d5bb9c65d210c1ff9c311",
     "id": null,
     "metadata": {},
     "name": "FasolkiQuery",
     "operationKind": "query",
-    "text": "query FasolkiQuery {\n  viewer {\n    __typename\n    ...FasolkiViewerFragment\n    id\n  }\n}\n\nfragment CounterDocumentFragment on Document {\n  __isDocument: __typename\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment FasolkiViewerFragment on Viewer {\n  __isViewer: __typename\n  id\n  firstName\n  documents {\n    __typename\n    ...CounterDocumentFragment\n    id\n  }\n}\n"
+    "text": "query FasolkiQuery {\n  viewer {\n    __typename\n    ...FasolkiViewerFragment\n    id\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment FasolkiViewerFragment on Viewer {\n  __isViewer: __typename\n  id\n  firstName\n  documents(first: 10) {\n    edges {\n      node {\n        ...CounterFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();

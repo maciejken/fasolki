@@ -3,11 +3,10 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import { Provider } from 'react-redux';
+import { useEffect, useState } from 'react';
 
 import { useColorScheme } from '@/components/useColorScheme';
-import { store } from '@/store';
+import { AuthContext } from '@/features/auth/authContext';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -48,15 +47,21 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  const [tokenValue, setTokenValue] = useState("");
 
   return (
-    <Provider store={store}>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <AuthContext.Provider value={{
+        token: tokenValue,
+        setToken: (value: string) => {
+          setTokenValue(value);
+        }
+      }}>
         <Stack>
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="fasolki" options={{ headerShown: false }} />
         </Stack>
-      </ThemeProvider>
-    </Provider>
+      </AuthContext.Provider>
+    </ThemeProvider>
   );
 }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<33c4a4bdb7ea096e03cfec1a087b75a0>>
+ * @generated SignedSource<<bff4c300ad87dc8d3334fb0e327f8f9f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -34,7 +34,7 @@ const node: ReaderFragment = {
     }
   ],
   "type": "Document",
-  "abstractKey": "__isDocument"
+  "abstractKey": null
 };
 
 (node as any).hash = "a04db92408e428455acc1dc47e0d160e";

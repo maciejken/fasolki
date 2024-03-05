@@ -1,13 +1,12 @@
 import * as Linking from 'expo-linking';
 import { StyleSheet, Text, View } from 'react-native';
-import { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 
-import { useAppDispatch } from '@/store/hooks';
-import { setAuthToken } from '@/features/auth';
 import { ExternalLink } from '@/components/ExternalLink';
+import { AuthContext } from '@/features/auth/authContext';
 
 export default function WelcomeLayout() {
-  const dispatch = useAppDispatch();
+  const { setToken } = useContext(AuthContext);
   const url = Linking.useURL();
 
   useEffect(() => {
@@ -16,7 +15,7 @@ export default function WelcomeLayout() {
       const token = queryParams?.token;
 
       if ('string' === typeof token) {
-        dispatch(setAuthToken(token));
+        setToken(token);
       }
     }
   }, [url]);

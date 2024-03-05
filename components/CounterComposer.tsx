@@ -1,7 +1,7 @@
 import React, { createRef } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { graphql } from "relay-runtime";
+import { ConnectionHandler, graphql } from "relay-runtime";
 import { useMutation } from "react-relay";
 
 const CounterComposerFragment = graphql`
@@ -12,21 +12,32 @@ const CounterComposerFragment = graphql`
 
 const CounterComposerMutation = graphql`
   mutation CounterComposerMutation(
-    $type: String!
-    $title: String
-    $content: String!
+    $type: String!,
+    $title: String,
+    $content: String!,
+    $connections: [ID!]!,
   ) {
     addDocument(
       type: $type,
       title: $title,
       content: $content
     ) {
-      ...CounterComposerFragment
+      viewer {
+        ...FasolkiViewerFragment
+      }
+      documentEdge
+        @prependEdge(connections: $connections)
+      {
+        node {
+          ...CounterFragment
+        }
+      }
     }
   }
 `;
 
 interface CounterComposerProps {
+  viewerId: string;
   onExit?: () => void;
 }
 
@@ -36,7 +47,7 @@ const getIconName = (canSave: boolean, loading: boolean) => {
   return canSave ? 'save-outline' : 'close-outline';
 }
 
-export default function CounterComposer({ onExit }: CounterComposerProps) {
+export default function CounterComposer({ viewerId, onExit }: CounterComposerProps) {
 
   const [counterTitle, setCounterTitle] = React.useState("");
   const [counterContent, setCounterContent] = React.useState("");
@@ -61,11 +72,16 @@ export default function CounterComposer({ onExit }: CounterComposerProps) {
 
   const handleSubmitUpdate = () => {
     if (canSave) {
+      const connectionId = ConnectionHandler.getConnectionID(
+        viewerId,
+        'FasolkiViewerFragment_documents',
+      );
       commitMutation({
         variables: {
           type: 'counter',
           title: counterTitle,
-          content: counterContent
+          content: counterContent,
+          connections: [connectionId],
         }
       })
       setCanSave(false);

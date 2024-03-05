@@ -3,10 +3,10 @@ import { StyleSheet, TextInput, View } from "react-native";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { graphql } from "relay-runtime";
 import { useFragment, useMutation } from "react-relay";
-import { CounterDocumentFragment$key } from "./__generated__/CounterDocumentFragment.graphql";
+import { CounterFragment$key } from "./__generated__/CounterFragment.graphql";
 
-const CounterDocumentFragment = graphql`
-  fragment CounterDocumentFragment on Document {
+const CounterFragment = graphql`
+  fragment CounterFragment on Document {
     id
     type
     title
@@ -15,8 +15,8 @@ const CounterDocumentFragment = graphql`
   }
 `;
 
-const CounterUpdateMutation = graphql`
-  mutation CounterUpdateMutation(
+const CounterMutation = graphql`
+  mutation CounterMutation(
     $id: String!
     $title: String
     $content: String
@@ -26,13 +26,15 @@ const CounterUpdateMutation = graphql`
       title: $title,
       content: $content
     ) {
-      ...CounterDocumentFragment
+      viewer {
+        ...FasolkiViewerFragment
+      }
     }
   }
 `;
 
 interface CounterProps {
-  document: CounterDocumentFragment$key;
+  document: CounterFragment$key;
 }
 
 const getIconColor = (enabled: boolean) => enabled ? 'black' : 'white';
@@ -52,14 +54,13 @@ const getIcon = (canEdit: boolean, canSave: boolean, loading: boolean) => {
 export default function Counter({
   document,
 }: CounterProps) {
-  const { id, title, content, accessLevel } = useFragment(CounterDocumentFragment, document)
-  const [commitMutation, isMutationInFlight] = useMutation(CounterUpdateMutation);
+  const { id, title, content, accessLevel } = useFragment(CounterFragment, document)
+  const [commitMutation, isMutationInFlight] = useMutation(CounterMutation);
   const [counterTitle, setCounterTitle] = React.useState(title || "");
   const [counterContent, setCounterContent] = React.useState(content);
   const [canSave, setCanSave] = React.useState(false);
   const [canEdit, canShare] = [(accessLevel ?? 0) > 1, (accessLevel ?? 0) > 2];
   const contentInputRef = createRef<TextInput>();
-  const shouldShowShareIcon = !(isMutationInFlight || canSave) && canShare;
 
   const handleInputTitle = (value: string) => {
     setCounterTitle(value);
@@ -144,7 +145,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginRight: 32
+    marginRight: 16
   },
   actions: {
     flexDirection: 'row',

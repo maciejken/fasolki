@@ -9,11 +9,22 @@ import CounterComposer from "./CounterComposer";
 import { FasolkiViewerFragment$data } from "./__generated__/FasolkiViewerFragment.graphql";
 
 const FasolkiViewerFragment = graphql`
-  fragment FasolkiViewerFragment on Viewer {
+  fragment FasolkiViewerFragment on Viewer
+    @argumentDefinitions(
+      cursor: { type: "String" }
+      count: { type: "Int", defaultValue: 10 }
+    )
+  {
     id
     firstName
-    documents {
-      ...CounterDocumentFragment       
+    documents(first: $count, after: $cursor)
+      @connection(key: "FasolkiViewerFragment_documents")
+    {
+      edges {
+        node {
+          ...CounterFragment
+        }        
+      }
     }
   }
 `;
@@ -37,7 +48,7 @@ export default function Fasolki() {
   let data = useLazyLoadQuery<FasolkiQueryType>(
     FasolkiQuery,
     {},
-    { fetchKey, fetchPolicy: `${fetchKey ? 'network' : 'store'}-only` },
+    { fetchKey, fetchPolicy: 'network-only' }
   );
 
   const refresh = React.useCallback(() => {
@@ -47,7 +58,7 @@ export default function Fasolki() {
 
     setRefreshing(true);
 
-    fetchQuery(environment, FasolkiQuery, {})
+    fetchQuery(environment, FasolkiQuery, {}, {})
       .subscribe({
         complete: () => {
           setRefreshing(false);
@@ -75,11 +86,11 @@ export default function Fasolki() {
     <View style={styles.screen}>
       <View style={styles.listContainer}>
         <FlatList
-          data={viewer?.documents || []}
+          data={viewer?.documents?.edges?.map(edge => edge?.node) || []}
           renderItem={renderCounter}
           refreshControl={refreshControl}
         />
-        {creating && <CounterComposer onExit={() => {
+        {creating && <CounterComposer viewerId={viewer.id} onExit={() => {
           setCreating(false);
         }} />}
         {!creating && (

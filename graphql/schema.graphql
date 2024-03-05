@@ -1,35 +1,80 @@
+type Person implements Node {
+  id: ID!
+  firstName: String
+  lastName: String
+  email: String
+  phone: String
+  documents: DocumentsConnection
+}
+
+interface Node {
+  id: ID!
+}
+
 interface Viewer {
   id: ID!
   firstName: String
   lastName: String
   email: String
   phone: String
-  documents: [Document]!
-  groups: [Group]!
+  documents(
+    first: Int
+    after: String
+  ): DocumentsConnection
+  # groups: GroupsConnection
 }
 
 
-interface Document {
+type Document implements Node {
   id: ID!
   userId: ID!
   type: String
   title: String
   content: String!
   accessLevel: Int
+  createdAt: String
+  updatedAt: String
 }
 
-interface Group {
-  id: ID!
-  name: String
-  adminIds: [String]!
-  documents: [Document]!
+type DocumentsConnection {
+  edges: [DocumentsConnectionEdge]
+  pageInfo: PageInfo
 }
+
+type PageInfo {
+  startCursor: String
+  endCursor: String
+  lastCursor: String
+  hasNextPage: Boolean
+  hasPreviousPage: Boolean
+}
+
+type DocumentsConnectionEdge {
+  node: Document
+  cursor: String
+}
+
+# interface Group implements Node {
+#   id: ID!
+#   name: String
+#   adminIds: [String]!
+#   documents: DocumentsConnection
+# }
 
 type Query {
   viewer: Viewer
 }
 
 type Mutation {
-  addDocument(type: String!, title: String, content: String!): Document
-  updateDocument(id: String!, title: String, content: String): Document
+  addDocument(type: String!, title: String, content: String!): AddDocumentMutationResponse
+  updateDocument(id: String!, title: String, content: String): DocumentMutationResponse
+}
+
+type AddDocumentMutationResponse {
+  viewer: Viewer
+  documentEdge: DocumentsConnectionEdge
+}
+
+type DocumentMutationResponse {
+  viewer: Viewer
 }

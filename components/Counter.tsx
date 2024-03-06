@@ -1,9 +1,12 @@
-import React, { createRef } from "react";
+import React, { createRef, useEffect } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { graphql } from "relay-runtime";
 import { useFragment, useMutation } from "react-relay";
+import { Picker } from "@react-native-picker/picker";
+
 import { CounterFragment$key } from "./__generated__/CounterFragment.graphql";
+import getCounterOptions, { CounterAction } from "./getCounterOptions";
 
 const CounterFragment = graphql`
   fragment CounterFragment on Document {
@@ -39,8 +42,13 @@ interface CounterProps {
 
 const getIconColor = (enabled: boolean) => enabled ? 'black' : 'white';
 
-const getIcon = (canEdit: boolean, canSave: boolean, loading: boolean) => {
-  if (loading) {
+const getIconName = ({ canEdit, canSave, canShare, isLoading }: {
+  canEdit: boolean,
+  canSave: boolean,
+  canShare: boolean,
+  isLoading: boolean,
+}) => {
+  if (isLoading) {
     return "time-outline";
   }
 
@@ -48,7 +56,11 @@ const getIcon = (canEdit: boolean, canSave: boolean, loading: boolean) => {
     return "lock-closed-outline"
   }
 
-  return canSave ? "save-outline" : "ellipsis-vertical-outline"
+  if (canShare && !canSave) {
+    return "ellipsis-vertical-outline";
+  }
+
+  return canSave ? "save-outline" : "pencil-outline";
 }
 
 export default function Counter({
@@ -60,7 +72,24 @@ export default function Counter({
   const [counterContent, setCounterContent] = React.useState(content);
   const [canSave, setCanSave] = React.useState(false);
   const [canEdit, canShare] = [(accessLevel ?? 0) > 1, (accessLevel ?? 0) > 2];
+  const counterOptions = getCounterOptions(accessLevel as number);
+  const [isPickerOpen, setPickerOpen] = React.useState(false);
+  const [selectedAction, setSelectedAction] = React.useState<CounterAction>("edit");
+  const titleInputRef = createRef<TextInput>();
   const contentInputRef = createRef<TextInput>();
+  const pickerRef = createRef<any>();
+
+  useEffect(() => {
+    if (isPickerOpen && pickerRef.current) {
+      pickerRef.current.focus();
+    }
+  }, [isPickerOpen, pickerRef.current]);
+
+  const pickerActions: Record<"edit" | "share" | "delete", () => void> = {
+    edit: () => undefined,
+    share: () => undefined,
+    delete: () => undefined,
+  }
 
   const handleInputTitle = (value: string) => {
     setCounterTitle(value);
@@ -91,10 +120,35 @@ export default function Counter({
     }
   }
 
+  const handleActions = () => {
+    const hasPicker = canShare && !(canSave || isMutationInFlight);
+    const shouldSave = !isMutationInFlight && canSave;
+    const shouldEdit = !isMutationInFlight && canEdit;
+
+    if (hasPicker) {
+      setPickerOpen(true);
+    } else if (shouldSave) {
+      handleSubmitUpdate();
+    } else if (shouldEdit) {
+      titleInputRef.current?.focus();
+    }
+  };
+
+  const handleValueChange = (value: CounterAction) => {
+    setSelectedAction(value);
+  };
+
+  const handlePickerClose = () => {
+    const executePickerAction = pickerActions[selectedAction];
+    executePickerAction();
+    setPickerOpen(false);
+  };
+
   return (
     <View style={styles.counter}>
       <View style={styles.counterData}>
         <TextInput
+          ref={titleInputRef}
           value={counterTitle}
           style={styles.counterTitle}
           editable={canEdit}
@@ -116,10 +170,31 @@ export default function Counter({
       </View>
       <View style={styles.actions}>
         <Ionicons
-          name={getIcon(canEdit, canSave, isMutationInFlight)}
+          name={getIconName({
+            canEdit,
+            canSave,
+            canShare,
+            isLoading: isMutationInFlight,
+          })}
           size={24}
           color={canEdit ? 'black' : '#aaa'}
+          onPress={handleActions}
         />
+        {isPickerOpen && <Picker
+          ref={pickerRef}
+          prompt={title || id}
+          style={{ display: "none" }}
+          onValueChange={handleValueChange}
+          onBlur={handlePickerClose}
+        >
+          {counterOptions.map((option) =>
+            <Picker.Item
+              key={`${id}-${option.value}`}
+              label={option.label}
+              value={option.value}
+            />
+          )}
+        </Picker>}
       </View>
     </View>
   )
@@ -150,6 +225,13 @@ const styles = StyleSheet.create({
   actions: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // width: 32
+    width: 24
+  },
+  picker: {
+    display: 'none'
+  },
+  iconContainer: {
+    top: 14,
+
   }
 });

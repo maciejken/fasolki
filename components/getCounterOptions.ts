@@ -1,19 +1,14 @@
-export type CounterAction = "edit" | "share" | "delete";
+export type CounterAction = "share" | "delete";
 
 interface CounterOption {
+  id: string;
   value: CounterAction;
   label: string;
-  level: number;
 }
 
-const options: CounterOption[] = [
-  { value: "edit", label: "Zmień", level: 2 },
-  { value: "share", label: "Udostępnij", level: 3 },
-  { value: "delete", label: "Usuń", level: 4 },
-];
-
-export default function getCounterOptions(
-  accessLevel: number,
-): CounterOption[] {
-  return options.filter((o: CounterOption) => o.level <= accessLevel);
+export default function getCounterOptions(id: string): CounterOption[] {
+  return [
+    { id: `${id}-share`, value: "share", label: "Udostępnij" },
+    { id: `${id}-delete`, value: "delete", label: "Usuń" },
+  ];
 }

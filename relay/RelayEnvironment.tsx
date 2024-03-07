@@ -3,14 +3,14 @@ import { useMemo } from "react";
 import { RelayEnvironmentProvider } from "react-relay";
 import { createEnvironment } from "./environment";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import { AuthContext } from "@/features/auth/authContext";
+import AppContext from "@/appContext";
 
 export default function RelayEnvironment({
   children,
 }: {
   children: React.ReactNode;
 }): React.ReactElement {
-  const { token } = React.useContext(AuthContext);
+  const { token } = React.useContext(AppContext);
 
   const environment = useMemo(() => {
     if (token) {

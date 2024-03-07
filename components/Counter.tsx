@@ -1,12 +1,12 @@
-import React, { createRef, useEffect } from "react";
+import React, { createRef, useContext } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { graphql } from "relay-runtime";
 import { useFragment, useMutation } from "react-relay";
-import { Picker } from "@react-native-picker/picker";
 
 import { CounterFragment$key } from "./__generated__/CounterFragment.graphql";
-import getCounterOptions, { CounterAction } from "./getCounterOptions";
+import getCounterOptions from "./getCounterOptions";
+import AppContext, { initialPickerState } from "@/appContext";
 
 const CounterFragment = graphql`
   fragment CounterFragment on Document {
@@ -36,60 +36,68 @@ const CounterMutation = graphql`
   }
 `;
 
+const CounterDeleteMutation = graphql`
+  mutation CounterDeleteMutation(
+    $id: String!
+  ) {
+  deleteDocument(id: $id)
+    {
+      viewer {
+        ...FasolkiViewerFragment
+      }
+    }
+  }
+`;
+
 interface CounterProps {
   document: CounterFragment$key;
 }
 
 const getIconColor = (enabled: boolean) => enabled ? 'black' : 'white';
 
-const getIconName = ({ canEdit, canSave, canShare, isLoading }: {
-  canEdit: boolean,
+type IconName =
+  | "lock-closed-outline"
+  | "pencil-outline"
+  | "share-social-outline"
+  | "ellipsis-vertical-outline"
+  | "time-outline"
+  | "save-outline";
+
+const icons: Record<string, IconName> = {
+  1: "lock-closed-outline",
+  2: "pencil-outline",
+  3: "share-social-outline",
+  4: "ellipsis-vertical-outline",
+  time: "time-outline",
+  save: "save-outline"
+}
+
+
+const getIconName = ({ accessLevel, canSave, isLoading }: {
+  accessLevel: number,
   canSave: boolean,
-  canShare: boolean,
   isLoading: boolean,
 }) => {
   if (isLoading) {
-    return "time-outline";
+    return icons.time;
   }
-
-  if (!canEdit) {
-    return "lock-closed-outline"
-  }
-
-  if (canShare && !canSave) {
-    return "ellipsis-vertical-outline";
-  }
-
-  return canSave ? "save-outline" : "pencil-outline";
+  return canSave ? icons.save : icons[accessLevel.toString()];
 }
 
 export default function Counter({
   document,
 }: CounterProps) {
   const { id, title, content, accessLevel } = useFragment(CounterFragment, document)
-  const [commitMutation, isMutationInFlight] = useMutation(CounterMutation);
+  const [commitMutation, isUpdateInFlight] = useMutation(CounterMutation);
+  const [commitRemoval, isRemovalInFlight] = useMutation(CounterDeleteMutation);
   const [counterTitle, setCounterTitle] = React.useState(title || "");
   const [counterContent, setCounterContent] = React.useState(content);
   const [canSave, setCanSave] = React.useState(false);
-  const [canEdit, canShare] = [(accessLevel ?? 0) > 1, (accessLevel ?? 0) > 2];
-  const counterOptions = getCounterOptions(accessLevel as number);
-  const [isPickerOpen, setPickerOpen] = React.useState(false);
-  const [selectedAction, setSelectedAction] = React.useState<CounterAction>("edit");
+  const [canEdit, canShare, canDelete] = [1, 2, 3].map((level: number) => (accessLevel ?? 0) > level);
+  const { setPicker } = useContext(AppContext);
   const titleInputRef = createRef<TextInput>();
   const contentInputRef = createRef<TextInput>();
-  const pickerRef = createRef<any>();
-
-  useEffect(() => {
-    if (isPickerOpen && pickerRef.current) {
-      pickerRef.current.focus();
-    }
-  }, [isPickerOpen, pickerRef.current]);
-
-  const pickerActions: Record<"edit" | "share" | "delete", () => void> = {
-    edit: () => undefined,
-    share: () => undefined,
-    delete: () => undefined,
-  }
+  const isLoading = isUpdateInFlight || isRemovalInFlight;
 
   const handleInputTitle = (value: string) => {
     setCounterTitle(value);
@@ -118,30 +126,57 @@ export default function Counter({
       })
       setCanSave(false);
     }
-  }
+  };
 
-  const handleActions = () => {
-    const hasPicker = canShare && !(canSave || isMutationInFlight);
-    const shouldSave = !isMutationInFlight && canSave;
-    const shouldEdit = !isMutationInFlight && canEdit;
-
-    if (hasPicker) {
-      setPickerOpen(true);
-    } else if (shouldSave) {
-      handleSubmitUpdate();
-    } else if (shouldEdit) {
-      titleInputRef.current?.focus();
+  const handleDelete = () => {
+    if (canDelete) {
+      commitRemoval({
+        variables: { id }
+      });
     }
   };
 
-  const handleValueChange = (value: CounterAction) => {
-    setSelectedAction(value);
+  const handleValueChange = (value: string) => {
+    const executePickerAction = pickerActions[value];
+    if ('function' === typeof executePickerAction) {
+      executePickerAction();
+    }
   };
 
-  const handlePickerClose = () => {
-    const executePickerAction = pickerActions[selectedAction];
-    executePickerAction();
-    setPickerOpen(false);
+  const pickerActions: Record<string, () => void> = {
+    edit: () => titleInputRef.current?.focus(),
+    share: () => undefined,
+    delete: handleDelete,
+  }
+
+  const handlePickerClose = (isValueChanged: boolean) => {
+    if (!isValueChanged) {
+      console.debug('title ref:', titleInputRef.current)
+      titleInputRef.current?.focus();
+    }
+    setPicker(initialPickerState);
+  };
+
+  const handleActions = () => {
+    const hasPicker = canDelete && !(canSave || isLoading);
+    const shouldSave = !isLoading && canSave;
+    const shouldShare = !isLoading && canShare;
+    const shouldEdit = !isLoading && canEdit;
+
+    if (hasPicker) {
+      setPicker({
+        items: getCounterOptions(id),
+        prompt: title || id,
+        onChange: handleValueChange,
+        onClose: handlePickerClose,
+      });
+    } else if (shouldSave) {
+      handleSubmitUpdate();
+    } else if (shouldShare) {
+      console.warn("To be implemented");
+    } else if (shouldEdit) {
+      titleInputRef.current?.focus();
+    }
   };
 
   return (
@@ -171,30 +206,14 @@ export default function Counter({
       <View style={styles.actions}>
         <Ionicons
           name={getIconName({
-            canEdit,
+            accessLevel: accessLevel || 0,
             canSave,
-            canShare,
-            isLoading: isMutationInFlight,
+            isLoading,
           })}
           size={24}
           color={canEdit ? 'black' : '#aaa'}
           onPress={handleActions}
         />
-        {isPickerOpen && <Picker
-          ref={pickerRef}
-          prompt={title || id}
-          style={{ display: "none" }}
-          onValueChange={handleValueChange}
-          onBlur={handlePickerClose}
-        >
-          {counterOptions.map((option) =>
-            <Picker.Item
-              key={`${id}-${option.value}`}
-              label={option.label}
-              value={option.value}
-            />
-          )}
-        </Picker>}
       </View>
     </View>
   )

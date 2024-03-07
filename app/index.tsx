@@ -3,10 +3,10 @@ import { StyleSheet, Text, View } from 'react-native';
 import React, { useContext, useEffect } from 'react';
 
 import { ExternalLink } from '@/components/ExternalLink';
-import { AuthContext } from '@/features/auth/authContext';
+import AppContext from '@/appContext';
 
 export default function WelcomeLayout() {
-  const { setToken } = useContext(AuthContext);
+  const { setToken } = useContext(AppContext);
   const url = Linking.useURL();
 
   useEffect(() => {

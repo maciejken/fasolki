@@ -6,7 +6,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 
 import { useColorScheme } from '@/components/useColorScheme';
-import { AuthContext } from '@/features/auth/authContext';
+import AppContext, { initialPickerState } from '@/appContext';
+import { PickerProps } from '@/components/Picker';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -48,20 +49,25 @@ export default function RootLayout() {
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
   const [tokenValue, setTokenValue] = useState("");
+  const [pickerProps, setPickerProps] = useState<PickerProps>(initialPickerState);
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AuthContext.Provider value={{
+      <AppContext.Provider value={{
         token: tokenValue,
         setToken: (value: string) => {
           setTokenValue(value);
+        },
+        picker: pickerProps,
+        setPicker: (picker: PickerProps) => {
+          setPickerProps(picker);
         }
       }}>
         <Stack>
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="fasolki" options={{ headerShown: false }} />
         </Stack>
-      </AuthContext.Provider>
+      </AppContext.Provider>
     </ThemeProvider>
   );
 }

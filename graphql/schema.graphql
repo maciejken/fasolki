@@ -68,6 +68,7 @@ type Query {
 type Mutation {
   addDocument(type: String!, title: String, content: String!): AddDocumentMutationResponse
   updateDocument(id: String!, title: String, content: String): DocumentMutationResponse
+  deleteDocument(id: String!): DocumentMutationResponse
 }
 
 type AddDocumentMutationResponse {

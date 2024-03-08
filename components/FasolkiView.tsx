@@ -1,10 +1,11 @@
 import { useFragment } from "react-relay";
 import { graphql } from "relay-runtime";
 import { FasolkiViewerFragment$key } from "./__generated__/FasolkiViewerFragment.graphql";
-import { Button, FlatList, RefreshControl, StyleSheet, View } from "react-native";
+import { FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
 import Counter from "./Counter";
 import { useState } from "react";
 import CounterComposer from "./CounterComposer";
+import Icon, { Ionicon } from "./Icon";
 
 const FasolkiViewerFragment = graphql`
   fragment FasolkiViewerFragment on Viewer
@@ -53,11 +54,15 @@ export default function FasolkiView({ viewer, refreshing, refresh }: FasolkiView
           setCreating(false);
         }} />}
         {!creating && (
-          <View style={styles.actionCreate}>
-            <Button title="Dodaj" onPress={() => {
+          <Pressable
+            onPress={() => {
               setCreating(true);
-            }} />
-          </View>
+            }}
+            style={styles.button}
+          >
+            <Icon name={Ionicon.Add} style={styles.icon} />
+            <Text style={styles.buttonText}>Dodaj</Text>
+          </Pressable>
         )}
       </View>
     </View>
@@ -76,13 +81,27 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    marginBottom: 48,
   },
   list: {
     justifyContent: 'flex-start'
   },
-  actionCreate: {
-    width: 100,
+  button: {
+    paddingVertical: 16,
+    marginVertical: 12,
+    width: 300,
+    backgroundColor: '#eee',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 24,
-  }
+    position: 'absolute',
+    bottom: 0
+  },
+  buttonText: {
+    fontSize: 18
+  },
+  icon: {
+    position: 'absolute',
+    right: 24
+  },
 });

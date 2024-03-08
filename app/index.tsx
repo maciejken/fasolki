@@ -4,6 +4,7 @@ import React, { useContext, useEffect } from 'react';
 
 import { ExternalLink } from '@/components/ExternalLink';
 import AppContext from '@/appContext';
+import Icon, { Ionicon } from '@/components/Icon';
 
 export default function WelcomeLayout() {
   const { setToken } = useContext(AppContext);
@@ -22,12 +23,18 @@ export default function WelcomeLayout() {
 
   return (
     <View style={styles.screen}>
-      <ExternalLink href={process.env.EXPO_PUBLIC_LOGIN_URL!} style={styles.button}>
-        <Text style={styles.buttonText}>Logowanie</Text>
+      <ExternalLink href={process.env.EXPO_PUBLIC_LOGIN_URL!} style={styles.externalLink}>
+        <View style={styles.button}>
+          <Icon name={Ionicon.Login} style={styles.icon} />
+          <Text style={styles.buttonText}>Logowanie</Text>
+        </View>
       </ExternalLink>
 
-      <ExternalLink href={process.env.EXPO_PUBLIC_SIGNUP_URL!} style={styles.button}>
-        <Text style={styles.buttonText}>Rejestracja</Text>
+      <ExternalLink href={process.env.EXPO_PUBLIC_SIGNUP_URL!}>
+        <View style={styles.button}>
+          <Icon name={Ionicon.Signup} style={styles.icon} />
+          <Text style={styles.buttonText}>Rejestracja</Text>
+        </View>
       </ExternalLink>
     </View>
   );
@@ -39,12 +46,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  externalLink: {
+    marginBottom: 12
+  },
   button: {
     paddingVertical: 12,
     marginVertical: 12,
     width: 300,
-    backgroundColor: 'white',
-    textAlign: 'center'
+    backgroundColor: '#eee',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  icon: {
+    position: 'absolute',
+    right: 24
   },
   buttonText: {
     fontSize: 24,

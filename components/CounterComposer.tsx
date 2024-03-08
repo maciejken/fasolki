@@ -130,10 +130,11 @@ const styles = StyleSheet.create({
   counter: {
     flexDirection: 'row',
     width: '100%',
-    marginTop: -8,
     alignItems: 'center',
     padding: 12,
-    backgroundColor: '#faf489'
+    backgroundColor: '#faf489',
+    position: 'absolute',
+    bottom: 0
   },
   counterTitle: {
     fontSize: 16,
@@ -149,7 +150,7 @@ const styles = StyleSheet.create({
     marginRight: 32
   },
   actions: {
-    marginTop: 6,
+    marginTop: 4,
     flexDirection: 'row',
     justifyContent: 'space-between',
   }

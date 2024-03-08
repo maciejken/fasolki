@@ -1,11 +1,12 @@
-import { Picker as RNPicker } from "@react-native-picker/picker";
-import { createRef, useEffect, useState } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { createRef, useContext } from "react";
+import { Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import Icon, { Ionicon } from "./Icon";
+import AppContext, { initialPickerState } from "@/appContext";
 
 interface PickerOption {
-  id: string;
   label: string;
   value: string;
+  icon: Ionicon;
 }
 
 export interface PickerProps {
@@ -15,63 +16,78 @@ export interface PickerProps {
   onClose?: (isValueChanged: boolean) => void;
 }
 
-export default function Picker({ items, onChange, onClose, prompt }: PickerProps) {
-  const pickerRef = createRef<any>();
-  const [isValueChanged, setValueChanged] = useState(false);
+export default function Picker({ items, prompt, onChange }: PickerProps) {
+  const { setPicker } = useContext(AppContext);
 
   const handleClose = () => {
-    if ('function' === typeof onClose) {
-      onClose(isValueChanged);
-    }
+    setPicker(initialPickerState);
   }
 
   const handleChange = (value: string) => {
     if ('function' === typeof onChange) {
       onChange(value);
     }
-    setValueChanged(true);
-  }
-
-  useEffect(() => {
-    if (pickerRef.current) {
-      pickerRef.current?.focus();
-    }
-
-  }, [pickerRef.current]);
+    handleClose();
+  };
 
   return (
-    <TouchableOpacity style={[StyleSheet.absoluteFill, styles.overlay]}>
-      <View style={styles.pickerContainer}>
-        <RNPicker
-          ref={pickerRef}
-          prompt={prompt}
-          style={{ display: "none" }}
-          onValueChange={handleChange}
-          onBlur={handleClose}
-        >
-          {items.map((option) =>
-            <RNPicker.Item
-              key={`${option.id}-${option.value}`}
-              label={option.label}
-              value={option.value}
-            />
-          )}
-        </RNPicker>
-      </View>
-    </TouchableOpacity>
+    <Modal
+      visible={!!items.length}
+      transparent
+      animationType='none'
+    >
+      <TouchableOpacity style={styles.overlay} onPress={handleClose}>
+        <View style={styles.pickerContainer}>
+          <View style={styles.pickerPrompt}>
+            <Text style={styles.pickerPromptText}>{prompt}</Text>
+          </View>
+
+          {items.map((option) => (
+            <Pressable
+              key={`picker-item-${option.value}`}
+              style={styles.pickerItem}
+              onPress={() => handleChange(option.value)}
+            >
+              <Icon name={option.icon} />
+              <Text style={styles.pickerItemText}>{option.label}</Text>
+            </Pressable>
+          ))}
+        </View>
+      </TouchableOpacity>
+    </Modal>
   )
 }
 
 const styles = StyleSheet.create({
-  pickerContainer: {
-    position: 'absolute',
-    bottom: 0,
-    right: -100,
-    backgroundColor: 'white',
-    elevation: 5,
-  },
   overlay: {
-    position: "relative",
-    backgroundColor: "#f06"
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0,0,0,0.5)'
+  },
+  pickerContainer: {
+    backgroundColor: 'white',
+    paddingBottom: 20,
+    paddingHorizontal: 64,
+  },
+  pickerPrompt: {
+    alignItems: 'center',
+    padding: 16,
+    marginBottom: 16
+  },
+  pickerPromptText: {
+    fontSize: 22,
+    color: 'black'
+  },
+  pickerItem: {
+    paddingHorizontal: 64,
+    paddingVertical: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+    backgroundColor: '#eee'
+  },
+  pickerItemText: {
+    marginLeft: 12,
+    fontSize: 18
   }
 });

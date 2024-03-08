@@ -14,7 +14,7 @@ export default function FasolkiScreen() {
       <StatusBar />
       <React.Suspense fallback={<LoadingSpinner />}>
         <Fasolki />
-        {!!picker.items.length && <CustomPicker {...picker} />}
+        <CustomPicker {...picker} />
       </React.Suspense>
     </RelayEnvironment>
   );

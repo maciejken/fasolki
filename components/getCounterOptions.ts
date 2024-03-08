@@ -1,14 +1,16 @@
+import { Ionicon } from "./Icon";
+
 export type CounterAction = "share" | "delete";
 
 interface CounterOption {
-  id: string;
+  icon: Ionicon;
   value: CounterAction;
   label: string;
 }
 
-export default function getCounterOptions(id: string): CounterOption[] {
+export default function getCounterOptions(): CounterOption[] {
   return [
-    { id: `${id}-share`, value: "share", label: "Udostępnij" },
-    { id: `${id}-delete`, value: "delete", label: "Usuń" },
+    { icon: Ionicon.Share, value: "share", label: "Udostępnij" },
+    { icon: Ionicon.Trash, value: "delete", label: "Usuń" },
   ];
 }

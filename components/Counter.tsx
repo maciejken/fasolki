@@ -1,4 +1,4 @@
-import React, { createRef, useContext } from "react";
+import React, { createRef, useContext, useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { graphql } from "relay-runtime";
@@ -7,6 +7,7 @@ import { useFragment, useMutation } from "react-relay";
 import { CounterFragment$key } from "./__generated__/CounterFragment.graphql";
 import getCounterOptions from "./getCounterOptions";
 import AppContext, { initialPickerState } from "@/appContext";
+import { Ionicon } from "./Icon";
 
 const CounterFragment = graphql`
   fragment CounterFragment on Document {
@@ -55,21 +56,11 @@ interface CounterProps {
 
 const getIconColor = (enabled: boolean) => enabled ? 'black' : 'white';
 
-type IconName =
-  | "lock-closed-outline"
-  | "pencil-outline"
-  | "share-social-outline"
-  | "ellipsis-vertical-outline"
-  | "time-outline"
-  | "save-outline";
-
-const icons: Record<string, IconName> = {
-  1: "lock-closed-outline",
-  2: "pencil-outline",
-  3: "share-social-outline",
-  4: "ellipsis-vertical-outline",
-  time: "time-outline",
-  save: "save-outline"
+const icons: Record<string, Ionicon> = {
+  1: Ionicon.Lock,
+  2: Ionicon.Pencil,
+  3: Ionicon.Share,
+  4: Ionicon.Dots,
 }
 
 
@@ -79,9 +70,9 @@ const getIconName = ({ accessLevel, canSave, isLoading }: {
   isLoading: boolean,
 }) => {
   if (isLoading) {
-    return icons.time;
+    return Ionicon.Time;
   }
-  return canSave ? icons.save : icons[accessLevel.toString()];
+  return canSave ? Ionicon.Save : icons[accessLevel.toString()];
 }
 
 export default function Counter({
@@ -90,8 +81,8 @@ export default function Counter({
   const { id, title, content, accessLevel } = useFragment(CounterFragment, document)
   const [commitMutation, isUpdateInFlight] = useMutation(CounterMutation);
   const [commitRemoval, isRemovalInFlight] = useMutation(CounterDeleteMutation);
-  const [counterTitle, setCounterTitle] = React.useState(title || "");
-  const [counterContent, setCounterContent] = React.useState(content);
+  const [counterTitle, setCounterTitle] = useState(title || "");
+  const [counterContent, setCounterContent] = useState(content);
   const [canSave, setCanSave] = React.useState(false);
   const [canEdit, canShare, canDelete] = [1, 2, 3].map((level: number) => (accessLevel ?? 0) > level);
   const { setPicker } = useContext(AppContext);
@@ -136,6 +127,12 @@ export default function Counter({
     }
   };
 
+  const handleShare = () => {
+    if (canShare) {
+      console.warn("To be implemented");
+    }
+  }
+
   const handleValueChange = (value: string) => {
     const executePickerAction = pickerActions[value];
     if ('function' === typeof executePickerAction) {
@@ -144,15 +141,13 @@ export default function Counter({
   };
 
   const pickerActions: Record<string, () => void> = {
-    edit: () => titleInputRef.current?.focus(),
-    share: () => undefined,
+    share: handleShare,
     delete: handleDelete,
   }
 
   const handlePickerClose = (isValueChanged: boolean) => {
     if (!isValueChanged) {
-      console.debug('title ref:', titleInputRef.current)
-      titleInputRef.current?.focus();
+      handleShare();
     }
     setPicker(initialPickerState);
   };
@@ -165,7 +160,7 @@ export default function Counter({
 
     if (hasPicker) {
       setPicker({
-        items: getCounterOptions(id),
+        items: getCounterOptions(),
         prompt: title || id,
         onChange: handleValueChange,
         onClose: handlePickerClose,
@@ -173,7 +168,7 @@ export default function Counter({
     } else if (shouldSave) {
       handleSubmitUpdate();
     } else if (shouldShare) {
-      console.warn("To be implemented");
+      handleShare();
     } else if (shouldEdit) {
       titleInputRef.current?.focus();
     }
@@ -244,7 +239,8 @@ const styles = StyleSheet.create({
   actions: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: 24
+    width: 24,
+    marginTop: 2
   },
   picker: {
     display: 'none'

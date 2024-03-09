@@ -140,7 +140,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 12,
     backgroundColor: '#faf489',
-    marginBottom: 12
   },
   counterTitle: {
     fontSize: 16,

@@ -16,8 +16,6 @@ const FasolkiQuery = graphql`
   }
 `;
 
-const getTypeFilter = (type: string) => (d: any) => d?.type === type;
-
 export default function Fasolki() {
   const [fetchKey, setFetchKey] = React.useState(0);
   const [refreshing, setRefreshing] = React.useState(false);

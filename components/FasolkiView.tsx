@@ -1,11 +1,9 @@
 import { useFragment } from "react-relay";
 import { graphql } from "relay-runtime";
 import { FasolkiViewerFragment$key } from "./__generated__/FasolkiViewerFragment.graphql";
-import { FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
+import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import Counter from "./Counter";
-import { useState } from "react";
 import CounterComposer from "./CounterComposer";
-import Icon, { Ionicon } from "./Icon";
 
 const FasolkiViewerFragment = graphql`
   fragment FasolkiViewerFragment on Viewer
@@ -35,7 +33,6 @@ interface FasolkiViewProps {
 }
 
 export default function FasolkiView({ viewer, refreshing, refresh }: FasolkiViewProps) {
-  const [creating, setCreating] = useState(false);
   const data = useFragment(FasolkiViewerFragment, viewer);
 
   const renderCounter = ({ item }: any) => <Counter document={item} />
@@ -50,6 +47,7 @@ export default function FasolkiView({ viewer, refreshing, refresh }: FasolkiView
         renderItem={renderCounter}
         refreshControl={refreshControl}
         contentContainerStyle={styles.listContainer}
+        removeClippedSubviews={false}
       />
     </View>
   );

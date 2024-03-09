@@ -78,7 +78,7 @@ const getIconName = ({ accessLevel, canSave, isLoading }: {
 export default function Counter({
   document,
 }: CounterProps) {
-  const { id, title, content, accessLevel } = useFragment(CounterFragment, document)
+  const { id, title, content, accessLevel, type } = useFragment(CounterFragment, document)
   const [commitMutation, isUpdateInFlight] = useMutation(CounterMutation);
   const [commitRemoval, isRemovalInFlight] = useMutation(CounterDeleteMutation);
   const [counterTitle, setCounterTitle] = useState(title || "");
@@ -206,9 +206,13 @@ export default function Counter({
     } else if (shouldShare) {
       handleShare();
     } else if (shouldEdit) {
-      titleInputRef.current?.focus();
+      setTitleFocused(true);
     }
   };
+
+  if (type !== 'counter') {
+    return null;
+  }
 
   return (
     <View style={styles.counter}>

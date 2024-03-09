@@ -36,7 +36,7 @@ export default function Picker({ items, prompt, onChange }: PickerProps) {
       transparent
       animationType='none'
     >
-      <TouchableOpacity style={styles.overlay} onPress={handleClose}>
+      <Pressable style={styles.overlay} onPress={handleClose}>
         <View style={styles.pickerContainer}>
           <View style={styles.pickerPrompt}>
             <Text style={styles.pickerPromptText}>{prompt}</Text>
@@ -48,12 +48,14 @@ export default function Picker({ items, prompt, onChange }: PickerProps) {
               style={styles.pickerItem}
               onPress={() => handleChange(option.value)}
             >
-              <Icon name={option.icon} />
               <Text style={styles.pickerItemText}>{option.label}</Text>
+              <Icon name={option.icon} style={styles.pickerItemIcon} />
             </Pressable>
           ))}
+
+          <Icon name={Ionicon.Close} style={styles.pickerCloseIcon} />
         </View>
-      </TouchableOpacity>
+      </Pressable>
     </Modal>
   )
 }
@@ -79,15 +81,23 @@ const styles = StyleSheet.create({
     color: 'black'
   },
   pickerItem: {
-    paddingHorizontal: 64,
     paddingVertical: 16,
     flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 12,
     backgroundColor: '#eee'
   },
   pickerItemText: {
-    marginLeft: 12,
     fontSize: 18
+  },
+  pickerItemIcon: {
+    position: 'absolute',
+    right: 24
+  },
+  pickerCloseIcon: {
+    position: 'absolute',
+    right: 16,
+    top: 20
   }
 });

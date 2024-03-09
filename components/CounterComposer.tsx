@@ -1,8 +1,9 @@
-import React, { createRef } from "react";
+import { createRef, useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { ConnectionHandler, graphql } from "relay-runtime";
 import { useMutation } from "react-relay";
+import { Ionicon } from "./Icon";
 
 const CounterComposerFragment = graphql`
   fragment CounterComposerFragment on Document {
@@ -38,20 +39,20 @@ const CounterComposerMutation = graphql`
 
 interface CounterComposerProps {
   viewerId: string;
-  onExit?: () => void;
 }
 
 const getIconName = (canSave: boolean, loading: boolean) => {
-  if (loading) return 'time-outline';
+  if (loading) return Ionicon.Time;
 
-  return canSave ? 'save-outline' : 'close-outline';
+  return canSave ? Ionicon.Save : Ionicon.Close;
 }
 
-export default function CounterComposer({ viewerId, onExit }: CounterComposerProps) {
+export default function CounterComposer({ viewerId }: CounterComposerProps) {
 
-  const [counterTitle, setCounterTitle] = React.useState("");
-  const [counterContent, setCounterContent] = React.useState("");
-  const [canSave, setCanSave] = React.useState(false);
+  const [counterTitle, setCounterTitle] = useState("");
+  const [counterContent, setCounterContent] = useState("");
+  const [canSave, setCanSave] = useState(false);
+  const titleInputRef = createRef<TextInput>();
   const contentInputRef = createRef<TextInput>();
 
   const [commitMutation, isMutationInFlight] = useMutation(CounterComposerMutation);
@@ -82,25 +83,31 @@ export default function CounterComposer({ viewerId, onExit }: CounterComposerPro
           title: counterTitle,
           content: counterContent,
           connections: [connectionId],
+        },
+        onCompleted() {
+          setCounterTitle("");
+          setCounterContent("");
         }
       })
       setCanSave(false);
     }
-
-    if ('function' === typeof onExit) onExit();
+    titleInputRef.current?.blur();
+    contentInputRef.current?.blur();
   }
+
+  const iconName: Ionicon = getIconName(canSave, isMutationInFlight);
 
   return (
     <View style={styles.counter}>
       <View style={styles.counterData}>
         <TextInput
+          ref={titleInputRef}
           value={counterTitle}
           style={styles.counterTitle}
           inputMode="text"
           onChangeText={handleChangeTitle}
           onSubmitEditing={handleSubmitTitle}
           placeholder="Tytuł"
-          autoFocus
           enterKeyHint="next"
         />
         <TextInput
@@ -116,7 +123,7 @@ export default function CounterComposer({ viewerId, onExit }: CounterComposerPro
       </View>
       <View style={styles.actions}>
         <Ionicons
-          name={getIconName(canSave, isMutationInFlight)}
+          name={iconName}
           size={24}
           color="black"
           onPress={handleSubmitUpdate}
@@ -133,21 +140,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 12,
     backgroundColor: '#faf489',
-    position: 'absolute',
-    bottom: 0
+    marginBottom: 12
   },
   counterTitle: {
     fontSize: 16,
+    minWidth: 150
   },
   counterContent: {
     fontSize: 24,
+    minWidth: 150,
+    textAlign: 'right'
   },
   counterData: {
     flexDirection: 'row',
     flexGrow: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginRight: 32
+    marginRight: 16
   },
   actions: {
     marginTop: 4,

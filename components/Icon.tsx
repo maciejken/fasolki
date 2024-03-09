@@ -3,6 +3,7 @@ import { StyleProp, View, ViewStyle } from "react-native";
 
 export enum Ionicon {
   Add = "add-outline",
+  Close = "close-outline",
   Dots = "ellipsis-vertical-outline",
   Lock = "lock-closed-outline",
   Login = "log-in-outline",

@@ -1,5 +1,5 @@
 import React, { createRef, useContext, useState } from "react";
-import { StyleSheet, TextInput, View } from "react-native";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { graphql } from "relay-runtime";
 import { useFragment, useMutation } from "react-relay";
@@ -85,10 +85,49 @@ export default function Counter({
   const [counterContent, setCounterContent] = useState(content);
   const [canSave, setCanSave] = React.useState(false);
   const [canEdit, canShare, canDelete] = [1, 2, 3].map((level: number) => (accessLevel ?? 0) > level);
+  const [titleFocused, setTitleFocused] = useState(false);
+  const [contentFocused, setContentFocused] = useState(false);
   const { setPicker } = useContext(AppContext);
   const titleInputRef = createRef<TextInput>();
   const contentInputRef = createRef<TextInput>();
   const isLoading = isUpdateInFlight || isRemovalInFlight;
+  const editing = titleFocused || contentFocused;
+
+  const handlePressTitle = () => {
+    if (canEdit) {
+      setCounterTitle(title || "");
+      setCounterContent(content);
+      setTitleFocused(true);
+    }
+  };
+
+  const handlePressContent = () => {
+    if (canEdit) {
+      setCounterTitle(title || "");
+      setCounterContent(content);
+      setContentFocused(true);
+    }
+  };
+
+  const handleTitleFocus = () => {
+    if (!titleFocused) {
+      setTitleFocused(true);
+    }
+  };
+
+  const handleContentFocus = () => {
+    if (!contentFocused) {
+      setContentFocused(true);
+    }
+  };
+
+  const handleTitleBlur = () => {
+    setTitleFocused(false);
+  };
+
+  const handleContentBlur = () => {
+    setContentFocused(false);
+  };
 
   const handleInputTitle = (value: string) => {
     setCounterTitle(value);
@@ -102,8 +141,7 @@ export default function Counter({
 
   const handleSubmitTitle = () => {
     contentInputRef.current?.focus();
-    const end = counterTitle.length;
-    contentInputRef.current?.setSelection(end, end);
+    setContentFocused(true);
   }
 
   const handleSubmitUpdate = () => {
@@ -116,6 +154,7 @@ export default function Counter({
         }
       })
       setCanSave(false);
+      setContentFocused(false);
     }
   };
 
@@ -145,10 +184,7 @@ export default function Counter({
     delete: handleDelete,
   }
 
-  const handlePickerClose = (isValueChanged: boolean) => {
-    if (!isValueChanged) {
-      handleShare();
-    }
+  const handlePickerClose = () => {
     setPicker(initialPickerState);
   };
 
@@ -177,7 +213,10 @@ export default function Counter({
   return (
     <View style={styles.counter}>
       <View style={styles.counterData}>
-        <TextInput
+        {!editing && <Pressable onPress={handlePressTitle}>
+          <Text style={styles.counterTitle}>{title}</Text>
+        </Pressable>}
+        {editing && <TextInput
           ref={titleInputRef}
           value={counterTitle}
           style={styles.counterTitle}
@@ -186,8 +225,14 @@ export default function Counter({
           onChangeText={handleInputTitle}
           onSubmitEditing={handleSubmitTitle}
           enterKeyHint="next"
-        />
-        <TextInput
+          autoFocus={titleFocused}
+          onFocus={handleTitleFocus}
+          onBlur={handleTitleBlur}
+        />}
+        {!editing && <Pressable onPress={handlePressContent}>
+          <Text style={styles.counterContent}>{content}</Text>
+        </Pressable>}
+        {editing && <TextInput
           ref={contentInputRef}
           value={counterContent}
           style={styles.counterContent}
@@ -196,7 +241,10 @@ export default function Counter({
           onChangeText={handleInputContent}
           onSubmitEditing={handleSubmitUpdate}
           enterKeyHint="done"
-        />
+          autoFocus={contentFocused}
+          onFocus={handleContentFocus}
+          onBlur={handleContentBlur}
+        />}
       </View>
       <View style={styles.actions}>
         <Ionicons
@@ -225,9 +273,12 @@ const styles = StyleSheet.create({
   },
   counterTitle: {
     fontSize: 16,
+    minWidth: 150,
   },
   counterContent: {
     fontSize: 24,
+    minWidth: 150,
+    textAlign: 'right'
   },
   counterData: {
     flexDirection: 'row',

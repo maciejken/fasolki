@@ -44,46 +44,26 @@ export default function FasolkiView({ viewer, refreshing, refresh }: FasolkiView
 
   return (
     <View style={styles.screen}>
-      <View style={styles.listContainer}>
-        <FlatList
-          data={data?.documents?.edges?.map(edge => edge?.node) || []}
-          renderItem={renderCounter}
-          refreshControl={refreshControl}
-        />
-        {creating && <CounterComposer viewerId={data.id} onExit={() => {
-          setCreating(false);
-        }} />}
-        {!creating && (
-          <Pressable
-            onPress={() => {
-              setCreating(true);
-            }}
-            style={styles.button}
-          >
-            <Icon name={Ionicon.Add} style={styles.icon} />
-            <Text style={styles.buttonText}>Dodaj</Text>
-          </Pressable>
-        )}
-      </View>
+      <CounterComposer viewerId={data.id} />
+      <FlatList
+        data={data?.documents?.edges?.map(edge => edge?.node) || []}
+        renderItem={renderCounter}
+        refreshControl={refreshControl}
+        contentContainerStyle={styles.listContainer}
+      />
     </View>
   );
 }
-
-
 
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
     marginTop: 24,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    alignItems: 'center'
   },
   listContainer: {
-    width: '100%',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  list: {
-    justifyContent: 'flex-start'
+    flexGrow: 1,
   },
   button: {
     paddingVertical: 16,
@@ -93,9 +73,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 24,
-    position: 'absolute',
-    bottom: 0
   },
   buttonText: {
     fontSize: 18

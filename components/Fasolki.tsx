@@ -1,48 +1,31 @@
-import * as React from "react";
+import React, { useContext } from "react";
 import { graphql } from "relay-runtime";
 import { useLazyLoadQuery, useRelayEnvironment } from "react-relay";
-import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import type { FasolkiQuery as FasolkiQueryType } from './__generated__/FasolkiQuery.graphql';
 import { fetchQuery } from "relay-runtime";
-import Counter from "./Counter";
+import FasolkiView from "./FasolkiView";
+import LoadingSpinner from "./LoadingSpinner";
+import CustomPicker from './Picker';
+import AppContext from '@/appContext';
 
 const FasolkiQuery = graphql`
   query FasolkiQuery {
     viewer {
-      id
-      email
-      documents {
-        id
-        type
-        title
-        content
-        accessLevel
-      }
-      groups {
-        id
-        documents {
-          id
-          type
-          title
-          content
-          accessLevel
-        }
-      }
+      ...FasolkiViewerFragment
     }
   }
 `;
-
-const getTypeFilter = (type: string) => (d: any) => d?.type === type;
 
 export default function Fasolki() {
   const [fetchKey, setFetchKey] = React.useState(0);
   const [refreshing, setRefreshing] = React.useState(false);
   const environment = useRelayEnvironment();
+  const { picker } = useContext(AppContext);
 
   let data = useLazyLoadQuery<FasolkiQueryType>(
     FasolkiQuery,
     {},
-    { fetchKey, fetchPolicy: `${fetchKey ? 'network' : 'store'}-only` },
+    { fetchKey, fetchPolicy: 'network-only' }
   );
 
   const refresh = React.useCallback(() => {
@@ -70,62 +53,19 @@ export default function Fasolki() {
     }
   }, []);
 
-  const userDocuments = data.viewer?.documents.filter(getTypeFilter('counter')) || [];
-  const userDocumentIds = userDocuments.map(d => d?.id).filter(Boolean);
-  const groups = data.viewer?.groups || [];
-  let groupDocuments: any[] = [];
-
-  for (const g of groups) {
-    if (g?.documents.length) {
-      groupDocuments = [
-        ...groupDocuments,
-        ...g.documents
-          .filter(d => !userDocumentIds.includes(d?.id))
-          .filter(getTypeFilter('counter'))
-      ];
-    }
+  if (!data.viewer) {
+    return <LoadingSpinner />;
   }
 
-  const fasolki = [...userDocuments, ...groupDocuments];
-
-  const renderCounter = ({ item }: any) => (
-    <Counter
-      id={item.id}
-      type={item.type}
-      title={item.title}
-      content={item.content}
-      accessLevel={item.accessLevel}
-    />
-  );
-
-  const refreshControl = <RefreshControl refreshing={refreshing} onRefresh={refresh} />;
-
   return (
-    <View style={styles.screen}>
-      <View style={styles.list}>
-        <FlatList
-          data={fasolki}
-          renderItem={renderCounter}
-          refreshControl={refreshControl}
-        />
-      </View>
-    </View>
+    <>
+      <FasolkiView
+        viewer={data.viewer}
+        refresh={refresh}
+        refreshing={refreshing}
+      />
+      <CustomPicker {...picker} />
+    </>
+
   );
 }
-
-
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    marginTop: 18
-  },
-  list: {
-    paddingVertical: 12,
-    marginVertical: 12,
-    flexGrow: 1,
-    backgroundColor: 'white',
-    justifyContent: 'center'
-  },
-});

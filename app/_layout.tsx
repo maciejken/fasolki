@@ -3,11 +3,11 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import { Provider } from 'react-redux';
+import { useEffect, useState } from 'react';
 
 import { useColorScheme } from '@/components/useColorScheme';
-import { store } from '@/store';
+import AppContext, { initialPickerState } from '@/appContext';
+import { PickerProps } from '@/components/Picker';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -48,15 +48,26 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  const [tokenValue, setTokenValue] = useState("");
+  const [pickerProps, setPickerProps] = useState<PickerProps>(initialPickerState);
 
   return (
-    <Provider store={store}>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <AppContext.Provider value={{
+        token: tokenValue,
+        setToken: (value: string) => {
+          setTokenValue(value);
+        },
+        picker: pickerProps,
+        setPicker: (picker: PickerProps) => {
+          setPickerProps(picker);
+        }
+      }}>
         <Stack>
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="fasolki" options={{ headerShown: false }} />
         </Stack>
-      </ThemeProvider>
-    </Provider>
+      </AppContext.Provider>
+    </ThemeProvider>
   );
 }

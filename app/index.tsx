@@ -1,13 +1,13 @@
 import * as Linking from 'expo-linking';
 import { StyleSheet, Text, View } from 'react-native';
-import { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 
-import { useAppDispatch } from '@/store/hooks';
-import { setAuthToken } from '@/features/auth';
 import { ExternalLink } from '@/components/ExternalLink';
+import AppContext from '@/appContext';
+import Icon, { Ionicon } from '@/components/Icon';
 
 export default function WelcomeLayout() {
-  const dispatch = useAppDispatch();
+  const { setToken } = useContext(AppContext);
   const url = Linking.useURL();
 
   useEffect(() => {
@@ -16,19 +16,25 @@ export default function WelcomeLayout() {
       const token = queryParams?.token;
 
       if ('string' === typeof token) {
-        dispatch(setAuthToken(token));
+        setToken(token);
       }
     }
   }, [url]);
 
   return (
     <View style={styles.screen}>
-      <ExternalLink href={process.env.EXPO_PUBLIC_LOGIN_URL!} style={styles.button}>
-        <Text style={styles.buttonText}>Logowanie</Text>
+      <ExternalLink href={process.env.EXPO_PUBLIC_LOGIN_URL!} style={styles.externalLink}>
+        <View style={styles.button}>
+          <Icon name={Ionicon.Login} style={styles.icon} />
+          <Text style={styles.buttonText}>Logowanie</Text>
+        </View>
       </ExternalLink>
 
-      <ExternalLink href={process.env.EXPO_PUBLIC_SIGNUP_URL!} style={styles.button}>
-        <Text style={styles.buttonText}>Rejestracja</Text>
+      <ExternalLink href={process.env.EXPO_PUBLIC_SIGNUP_URL!}>
+        <View style={styles.button}>
+          <Icon name={Ionicon.Signup} style={styles.icon} />
+          <Text style={styles.buttonText}>Rejestracja</Text>
+        </View>
       </ExternalLink>
     </View>
   );
@@ -40,12 +46,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  externalLink: {
+    marginBottom: 12
+  },
   button: {
     paddingVertical: 12,
     marginVertical: 12,
     width: 300,
-    backgroundColor: 'white',
-    textAlign: 'center'
+    backgroundColor: '#eee',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  icon: {
+    position: 'absolute',
+    right: 24
   },
   buttonText: {
     fontSize: 24,

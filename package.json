@@ -19,7 +19,6 @@
   "dependencies": {
     "@expo/vector-icons": "^14.0.0",
     "@react-navigation/native": "^6.0.2",
-    "@reduxjs/toolkit": "^2.1.0",
     "expo": "~50.0.6",
     "expo-constants": "~15.4.5",
     "expo-dev-client": "~3.3.8",
@@ -36,9 +35,7 @@
     "react-native-safe-area-context": "4.8.2",
     "react-native-screens": "~3.29.0",
     "react-native-web": "~0.19.6",
-    "react-redux": "^9.1.0",
     "react-relay": "^16.2.0",
-    "redux": "^5.0.1",
     "relay-runtime": "^16.2.0"
   },
   "devDependencies": {

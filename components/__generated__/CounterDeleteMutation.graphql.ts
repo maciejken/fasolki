@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<34b43eab5ccfd07336b98b182ecd373c>>
+ * @generated SignedSource<<6d9ed2f96361e5c64d6c850fd67a5579>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,71 +10,51 @@
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type CounterMutation$variables = {
-  content?: string | null | undefined;
+export type CounterDeleteMutation$variables = {
   id: string;
-  title?: string | null | undefined;
 };
-export type CounterMutation$data = {
-  readonly updateDocument: {
+export type CounterDeleteMutation$data = {
+  readonly deleteDocument: {
     readonly viewer: {
       readonly " $fragmentSpreads": FragmentRefs<"FasolkiViewerFragment">;
     } | null | undefined;
   } | null | undefined;
 };
-export type CounterMutation = {
-  response: CounterMutation$data;
-  variables: CounterMutation$variables;
+export type CounterDeleteMutation = {
+  response: CounterDeleteMutation$data;
+  variables: CounterDeleteMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "content"
-},
-v1 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "id"
-},
-v2 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "title"
-},
-v3 = [
+var v0 = [
   {
-    "kind": "Variable",
-    "name": "content",
-    "variableName": "content"
-  },
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "id"
+  }
+],
+v1 = [
   {
     "kind": "Variable",
     "name": "id",
     "variableName": "id"
-  },
-  {
-    "kind": "Variable",
-    "name": "title",
-    "variableName": "title"
   }
 ],
-v4 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v5 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v6 = [
+v4 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -83,21 +63,17 @@ v6 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/),
-      (v2/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "CounterMutation",
+    "name": "CounterDeleteMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": (v1/*: any*/),
         "concreteType": "DocumentMutationResponse",
         "kind": "LinkedField",
-        "name": "updateDocument",
+        "name": "deleteDocument",
         "plural": false,
         "selections": [
           {
@@ -125,20 +101,16 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [
-      (v1/*: any*/),
-      (v2/*: any*/),
-      (v0/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "CounterMutation",
+    "name": "CounterDeleteMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": (v1/*: any*/),
         "concreteType": "DocumentMutationResponse",
         "kind": "LinkedField",
-        "name": "updateDocument",
+        "name": "deleteDocument",
         "plural": false,
         "selections": [
           {
@@ -149,12 +121,12 @@ return {
             "name": "viewer",
             "plural": false,
             "selections": [
-              (v4/*: any*/),
+              (v2/*: any*/),
               {
                 "kind": "TypeDiscriminator",
                 "abstractKey": "__isViewer"
               },
-              (v5/*: any*/),
+              (v3/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -164,7 +136,7 @@ return {
               },
               {
                 "alias": null,
-                "args": (v6/*: any*/),
+                "args": (v4/*: any*/),
                 "concreteType": "DocumentsConnection",
                 "kind": "LinkedField",
                 "name": "documents",
@@ -186,7 +158,7 @@ return {
                         "name": "node",
                         "plural": false,
                         "selections": [
-                          (v5/*: any*/),
+                          (v3/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -215,7 +187,7 @@ return {
                             "name": "accessLevel",
                             "storageKey": null
                           },
-                          (v4/*: any*/)
+                          (v2/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -259,7 +231,7 @@ return {
               },
               {
                 "alias": null,
-                "args": (v6/*: any*/),
+                "args": (v4/*: any*/),
                 "filters": null,
                 "handle": "connection",
                 "key": "FasolkiViewerFragment_documents",
@@ -275,16 +247,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b66983eddd24581c7fd1ad666682062f",
+    "cacheID": "109ab577c743856c54362e7707749f94",
     "id": null,
     "metadata": {},
-    "name": "CounterMutation",
+    "name": "CounterDeleteMutation",
     "operationKind": "mutation",
-    "text": "mutation CounterMutation(\n  $id: String!\n  $title: String\n  $content: String\n) {\n  updateDocument(id: $id, title: $title, content: $content) {\n    viewer {\n      __typename\n      ...FasolkiViewerFragment\n      id\n    }\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment FasolkiViewerFragment on Viewer {\n  __isViewer: __typename\n  id\n  firstName\n  documents(first: 10) {\n    edges {\n      node {\n        ...CounterFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "mutation CounterDeleteMutation(\n  $id: String!\n) {\n  deleteDocument(id: $id) {\n    viewer {\n      __typename\n      ...FasolkiViewerFragment\n      id\n    }\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment FasolkiViewerFragment on Viewer {\n  __isViewer: __typename\n  id\n  firstName\n  documents(first: 10) {\n    edges {\n      node {\n        ...CounterFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c37dc1f2dd54fee8bb16713666e517d6";
+(node as any).hash = "cbd6d7cf2388c171d88424e8a95a02a9";
 
 export default node;

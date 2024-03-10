@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f2b7db73a0d354cee493afcc0eeefbec>>
+ * @generated SignedSource<<297456b960ed38ae68478ff83fac020f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,29 +9,11 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Query } from 'relay-runtime';
-export type AccessLevel = "Manage" | "Modify" | "None" | "View" | "%future added value";
+import { FragmentRefs } from "relay-runtime";
 export type FasolkiQuery$variables = Record<PropertyKey, never>;
 export type FasolkiQuery$data = {
   readonly viewer: {
-    readonly documents: ReadonlyArray<{
-      readonly accessLevel: AccessLevel | null | undefined;
-      readonly content: string | null | undefined;
-      readonly id: string;
-      readonly title: string | null | undefined;
-      readonly type: string | null | undefined;
-    } | null | undefined>;
-    readonly email: string | null | undefined;
-    readonly groups: ReadonlyArray<{
-      readonly documents: ReadonlyArray<{
-        readonly accessLevel: AccessLevel | null | undefined;
-        readonly content: string | null | undefined;
-        readonly id: string;
-        readonly title: string | null | undefined;
-        readonly type: string | null | undefined;
-      } | null | undefined>;
-      readonly id: string;
-    } | null | undefined>;
-    readonly id: string;
+    readonly " $fragmentSpreads": FragmentRefs<"FasolkiViewerFragment">;
   } | null | undefined;
 };
 export type FasolkiQuery = {
@@ -44,84 +26,23 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "__typename",
   "storageKey": null
 },
 v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "email",
+  "name": "id",
   "storageKey": null
 },
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "type",
-  "storageKey": null
-},
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "title",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "content",
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "accessLevel",
-  "storageKey": null
-},
-v6 = {
-  "alias": null,
-  "args": null,
-  "concreteType": null,
-  "kind": "LinkedField",
-  "name": "documents",
-  "plural": true,
-  "selections": [
-    (v0/*: any*/),
-    (v2/*: any*/),
-    (v3/*: any*/),
-    (v4/*: any*/),
-    (v5/*: any*/)
-  ],
-  "storageKey": null
-},
-v7 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "__typename",
-  "storageKey": null
-},
-v8 = {
-  "alias": null,
-  "args": null,
-  "concreteType": null,
-  "kind": "LinkedField",
-  "name": "documents",
-  "plural": true,
-  "selections": [
-    (v7/*: any*/),
-    (v0/*: any*/),
-    (v2/*: any*/),
-    (v3/*: any*/),
-    (v4/*: any*/),
-    (v5/*: any*/)
-  ],
-  "storageKey": null
-};
+v2 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 10
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": [],
@@ -137,21 +58,10 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
-          (v1/*: any*/),
-          (v6/*: any*/),
           {
-            "alias": null,
             "args": null,
-            "concreteType": null,
-            "kind": "LinkedField",
-            "name": "groups",
-            "plural": true,
-            "selections": [
-              (v0/*: any*/),
-              (v6/*: any*/)
-            ],
-            "storageKey": null
+            "kind": "FragmentSpread",
+            "name": "FasolkiViewerFragment"
           }
         ],
         "storageKey": null
@@ -174,23 +84,122 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v7/*: any*/),
           (v0/*: any*/),
+          {
+            "kind": "TypeDiscriminator",
+            "abstractKey": "__isViewer"
+          },
           (v1/*: any*/),
-          (v8/*: any*/),
           {
             "alias": null,
             "args": null,
-            "concreteType": null,
-            "kind": "LinkedField",
-            "name": "groups",
-            "plural": true,
-            "selections": [
-              (v7/*: any*/),
-              (v0/*: any*/),
-              (v8/*: any*/)
-            ],
+            "kind": "ScalarField",
+            "name": "firstName",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": (v2/*: any*/),
+            "concreteType": "DocumentsConnection",
+            "kind": "LinkedField",
+            "name": "documents",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "DocumentsConnectionEdge",
+                "kind": "LinkedField",
+                "name": "edges",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Document",
+                    "kind": "LinkedField",
+                    "name": "node",
+                    "plural": false,
+                    "selections": [
+                      (v1/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "type",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "title",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "content",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "accessLevel",
+                        "storageKey": null
+                      },
+                      (v0/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "cursor",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "PageInfo",
+                "kind": "LinkedField",
+                "name": "pageInfo",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "endCursor",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "hasNextPage",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": "documents(first:10)"
+          },
+          {
+            "alias": null,
+            "args": (v2/*: any*/),
+            "filters": null,
+            "handle": "connection",
+            "key": "FasolkiViewerFragment_documents",
+            "kind": "LinkedHandle",
+            "name": "documents"
           }
         ],
         "storageKey": null
@@ -198,16 +207,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "55cc48825ed1314e6ef704bccabbf05a",
+    "cacheID": "5c8ab462136d5bb9c65d210c1ff9c311",
     "id": null,
     "metadata": {},
     "name": "FasolkiQuery",
     "operationKind": "query",
-    "text": "query FasolkiQuery {\n  viewer {\n    __typename\n    id\n    email\n    documents {\n      __typename\n      id\n      type\n      title\n      content\n      accessLevel\n    }\n    groups {\n      __typename\n      id\n      documents {\n        __typename\n        id\n        type\n        title\n        content\n        accessLevel\n      }\n    }\n  }\n}\n"
+    "text": "query FasolkiQuery {\n  viewer {\n    __typename\n    ...FasolkiViewerFragment\n    id\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment FasolkiViewerFragment on Viewer {\n  __isViewer: __typename\n  id\n  firstName\n  documents(first: 10) {\n    edges {\n      node {\n        ...CounterFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0813b9b9cc21349058a786c4a416dbc6";
+(node as any).hash = "31b13978a781839cd5972c185cc359c8";
 
 export default node;

@@ -16,6 +16,7 @@ const CounterFragment = graphql`
     title
     content
     accessLevel
+    # createdAt
   }
 `;
 
@@ -198,6 +199,7 @@ export default function Counter({
       setPicker({
         items: getCounterOptions(),
         prompt: title || id,
+        // desc: `Utworzono ${new Intl.DateTimeFormat('pl').format(new Date(createdAt))}`,
         onChange: handleValueChange,
         onClose: handlePickerClose,
       });

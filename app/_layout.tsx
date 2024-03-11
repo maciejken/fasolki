@@ -4,6 +4,7 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { useColorScheme } from '@/components/useColorScheme';
 import AppContext, { initialPickerState } from '@/appContext';
@@ -53,21 +54,23 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AppContext.Provider value={{
-        token: tokenValue,
-        setToken: (value: string) => {
-          setTokenValue(value);
-        },
-        picker: pickerProps,
-        setPicker: (picker: PickerProps) => {
-          setPickerProps(picker);
-        }
-      }}>
-        <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="fasolki" options={{ headerShown: false }} />
-        </Stack>
-      </AppContext.Provider>
+      <SafeAreaProvider>
+        <AppContext.Provider value={{
+          token: tokenValue,
+          setToken: (value: string) => {
+            setTokenValue(value);
+          },
+          picker: pickerProps,
+          setPicker: (picker: PickerProps) => {
+            setPickerProps(picker);
+          }
+        }}>
+          <Stack>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="fasolki" options={{ headerShown: false }} />
+          </Stack>
+        </AppContext.Provider>
+      </SafeAreaProvider>
     </ThemeProvider>
   );
 }

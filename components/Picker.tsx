@@ -12,11 +12,12 @@ interface PickerOption {
 export interface PickerProps {
   items: PickerOption[];
   prompt?: string;
+  desc?: string;
   onChange?: (value: string) => void;
   onClose?: (isValueChanged: boolean) => void;
 }
 
-export default function Picker({ items, prompt, onChange }: PickerProps) {
+export default function Picker({ items, prompt, desc, onChange }: PickerProps) {
   const { setPicker } = useContext(AppContext);
 
   const handleClose = () => {
@@ -39,7 +40,8 @@ export default function Picker({ items, prompt, onChange }: PickerProps) {
       <Pressable style={styles.overlay} onPress={handleClose}>
         <View style={styles.pickerContainer}>
           <View style={styles.pickerPrompt}>
-            <Text style={styles.pickerPromptText}>{prompt}</Text>
+            {prompt && <Text style={styles.pickerPromptText}>{prompt}</Text>}
+            {desc && <Text style={styles.pickerPromptDesc}>{desc}</Text>}
           </View>
 
           {items.map((option) => (
@@ -74,11 +76,16 @@ const styles = StyleSheet.create({
   pickerPrompt: {
     alignItems: 'center',
     padding: 16,
-    marginBottom: 16
+    marginBottom: 8
   },
   pickerPromptText: {
     fontSize: 22,
     color: 'black'
+  },
+  pickerPromptDesc: {
+    marginTop: 8,
+    fontSize: 12,
+    color: 'grey'
   },
   pickerItem: {
     paddingVertical: 16,

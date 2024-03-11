@@ -66,6 +66,5 @@ export default function Fasolki() {
       />
       <CustomPicker {...picker} />
     </>
-
   );
 }

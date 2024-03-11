@@ -4,6 +4,7 @@ import { FasolkiViewerFragment$key } from "./__generated__/FasolkiViewerFragment
 import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import Counter from "./Counter";
 import CounterComposer from "./CounterComposer";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const FasolkiViewerFragment = graphql`
   fragment FasolkiViewerFragment on Viewer
@@ -34,13 +35,19 @@ interface FasolkiViewProps {
 
 export default function FasolkiView({ viewer, refreshing, refresh }: FasolkiViewProps) {
   const data = useFragment(FasolkiViewerFragment, viewer);
+  const insets = useSafeAreaInsets();
 
   const renderCounter = ({ item }: any) => <Counter document={item} />
 
   const refreshControl = <RefreshControl refreshing={refreshing} onRefresh={refresh} />;
 
   return (
-    <View style={styles.screen}>
+    <View style={[styles.screen, {
+      marginTop: insets.top,
+      marginRight: insets.right,
+      marginBottom: insets.bottom,
+      marginLeft: insets.left,
+    }]}>
       <CounterComposer viewerId={data.id} />
       <FlatList
         data={data?.documents?.edges?.map(edge => edge?.node) || []}
@@ -56,7 +63,6 @@ export default function FasolkiView({ viewer, refreshing, refresh }: FasolkiView
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    marginTop: 24,
     backgroundColor: 'white',
     alignItems: 'center'
   },

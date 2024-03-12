@@ -47,12 +47,6 @@ export default function Fasolki() {
       });
   }, [fetchKey]);
 
-  React.useEffect(() => {
-    if (!fetchKey) {
-      refresh();
-    }
-  }, []);
-
   if (!data.viewer) {
     return <LoadingSpinner />;
   }

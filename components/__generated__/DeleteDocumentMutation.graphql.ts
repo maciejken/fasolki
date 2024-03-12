@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6d9ed2f96361e5c64d6c850fd67a5579>>
+ * @generated SignedSource<<36ad7a78244ef5298bac4d11a4be22e1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,19 +10,19 @@
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type CounterDeleteMutation$variables = {
+export type DeleteDocumentMutation$variables = {
   id: string;
 };
-export type CounterDeleteMutation$data = {
+export type DeleteDocumentMutation$data = {
   readonly deleteDocument: {
     readonly viewer: {
       readonly " $fragmentSpreads": FragmentRefs<"FasolkiViewerFragment">;
     } | null | undefined;
   } | null | undefined;
 };
-export type CounterDeleteMutation = {
-  response: CounterDeleteMutation$data;
-  variables: CounterDeleteMutation$variables;
+export type DeleteDocumentMutation = {
+  response: DeleteDocumentMutation$data;
+  variables: DeleteDocumentMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -66,7 +66,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "CounterDeleteMutation",
+    "name": "DeleteDocumentMutation",
     "selections": [
       {
         "alias": null,
@@ -103,7 +103,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "CounterDeleteMutation",
+    "name": "DeleteDocumentMutation",
     "selections": [
       {
         "alias": null,
@@ -247,16 +247,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "109ab577c743856c54362e7707749f94",
+    "cacheID": "efbb2830e5bba37b76708173e4b7c8aa",
     "id": null,
     "metadata": {},
-    "name": "CounterDeleteMutation",
+    "name": "DeleteDocumentMutation",
     "operationKind": "mutation",
-    "text": "mutation CounterDeleteMutation(\n  $id: String!\n) {\n  deleteDocument(id: $id) {\n    viewer {\n      __typename\n      ...FasolkiViewerFragment\n      id\n    }\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment FasolkiViewerFragment on Viewer {\n  __isViewer: __typename\n  id\n  firstName\n  documents(first: 10) {\n    edges {\n      node {\n        ...CounterFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "mutation DeleteDocumentMutation(\n  $id: String!\n) {\n  deleteDocument(id: $id) {\n    viewer {\n      __typename\n      ...FasolkiViewerFragment\n      id\n    }\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment FasolkiViewerFragment on Viewer {\n  __isViewer: __typename\n  id\n  firstName\n  documents(first: 10) {\n    edges {\n      node {\n        ...CounterFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "cbd6d7cf2388c171d88424e8a95a02a9";
+(node as any).hash = "f28dde2b0e82bc5058088bfe324fd719";
 
 export default node;

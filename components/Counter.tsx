@@ -38,19 +38,6 @@ const CounterMutation = graphql`
   }
 `;
 
-const CounterDeleteMutation = graphql`
-  mutation CounterDeleteMutation(
-    $id: String!
-  ) {
-  deleteDocument(id: $id)
-    {
-      viewer {
-        ...FasolkiViewerFragment
-      }
-    }
-  }
-`;
-
 interface CounterProps {
   document: CounterFragment$key;
 }
@@ -81,7 +68,6 @@ export default function Counter({
 }: CounterProps) {
   const { id, title, content, accessLevel, type } = useFragment(CounterFragment, document)
   const [commitMutation, isUpdateInFlight] = useMutation(CounterMutation);
-  const [commitRemoval, isRemovalInFlight] = useMutation(CounterDeleteMutation);
   const [counterTitle, setCounterTitle] = useState(title || "");
   const [counterContent, setCounterContent] = useState(content);
   const [canSave, setCanSave] = React.useState(false);
@@ -91,7 +77,7 @@ export default function Counter({
   const { setPicker } = useContext(AppContext);
   const titleInputRef = createRef<TextInput>();
   const contentInputRef = createRef<TextInput>();
-  const isLoading = isUpdateInFlight || isRemovalInFlight;
+  const isLoading = isUpdateInFlight;
   const editing = titleFocused || contentFocused;
 
   const handlePressTitle = () => {
@@ -159,30 +145,10 @@ export default function Counter({
     }
   };
 
-  const handleDelete = () => {
-    if (canDelete) {
-      commitRemoval({
-        variables: { id }
-      });
-    }
-  };
-
   const handleShare = () => {
     if (canShare) {
       console.warn("To be implemented");
     }
-  }
-
-  const handleValueChange = (value: string) => {
-    const executePickerAction = pickerActions[value];
-    if ('function' === typeof executePickerAction) {
-      executePickerAction();
-    }
-  };
-
-  const pickerActions: Record<string, () => void> = {
-    share: handleShare,
-    delete: handleDelete,
   }
 
   const handlePickerClose = () => {
@@ -197,10 +163,9 @@ export default function Counter({
 
     if (hasPicker) {
       setPicker({
-        items: getCounterOptions(),
+        items: getCounterOptions(id),
         prompt: title || id,
         // desc: `Utworzono ${new Intl.DateTimeFormat('pl').format(new Date(createdAt))}`,
-        onChange: handleValueChange,
         onClose: handlePickerClose,
       });
     } else if (shouldSave) {

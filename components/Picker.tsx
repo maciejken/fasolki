@@ -1,12 +1,17 @@
-import { createRef, useContext } from "react";
-import { Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useContext } from "react";
+import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { router } from 'expo-router';
+
 import Icon, { Ionicon } from "./Icon";
 import AppContext, { initialPickerState } from "@/appContext";
+import Button from "./Button";
+import { RouteTemplate, StaticRoute } from "@/appContext/types";
 
-interface PickerOption {
+export interface PickerOption {
   label: string;
-  value: string;
   icon: Ionicon;
+  route: StaticRoute | RouteTemplate;
+  routeParams?: Record<'id', string>;
 }
 
 export interface PickerProps {
@@ -24,13 +29,6 @@ export default function Picker({ items, prompt, desc, onChange }: PickerProps) {
     setPicker(initialPickerState);
   }
 
-  const handleChange = (value: string) => {
-    if ('function' === typeof onChange) {
-      onChange(value);
-    }
-    handleClose();
-  };
-
   return (
     <Modal
       visible={!!items.length}
@@ -45,14 +43,19 @@ export default function Picker({ items, prompt, desc, onChange }: PickerProps) {
           </View>
 
           {items.map((option) => (
-            <Pressable
-              key={`picker-item-${option.value}`}
-              style={styles.pickerItem}
-              onPress={() => handleChange(option.value)}
-            >
-              <Text style={styles.pickerItemText}>{option.label}</Text>
-              <Icon name={option.icon} style={styles.pickerItemIcon} />
-            </Pressable>
+            <Button
+              key={option.route}
+              label={option.label}
+              icon={option.icon}
+              onPress={() => {
+                router.navigate({
+                  pathname: option.route,
+                  params: option.routeParams
+                });
+                handleClose();
+              }}
+              style={{ marginBottom: 16 }}
+            />
           ))}
 
           <Icon name={Ionicon.Close} style={styles.pickerCloseIcon} />
@@ -86,14 +89,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 12,
     color: 'grey'
-  },
-  pickerItem: {
-    paddingVertical: 16,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 12,
-    backgroundColor: '#eee'
   },
   pickerItemText: {
     fontSize: 18

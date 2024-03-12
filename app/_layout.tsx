@@ -65,9 +65,9 @@ function RootLayoutNav() {
             setPickerProps(picker);
           }
         }}>
-          <Stack>
-            <Stack.Screen name="index" options={{ headerShown: false }} />
-            <Stack.Screen name="fasolki" options={{ headerShown: false }} />
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="index" />
+            <Stack.Screen name="fasolki" />
           </Stack>
         </AppContext.Provider>
       </SafeAreaProvider>

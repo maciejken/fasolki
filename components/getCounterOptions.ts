@@ -1,16 +1,21 @@
 import { Ionicon } from "./Icon";
+import { PickerOption } from "./Picker";
 
 export type CounterAction = "share" | "delete";
 
-interface CounterOption {
-  icon: Ionicon;
-  value: CounterAction;
-  label: string;
-}
-
-export default function getCounterOptions(): CounterOption[] {
+export default function getCounterOptions(id: string): PickerOption[] {
   return [
-    { icon: Ionicon.Share, value: "share", label: "Udostępnij" },
-    { icon: Ionicon.Trash, value: "delete", label: "Usuń" },
+    {
+      icon: Ionicon.Share,
+      label: "Udostępnij",
+      route: `/fasolki/[id]/share`,
+      routeParams: { id },
+    },
+    {
+      icon: Ionicon.Trash,
+      label: "Usuń",
+      route: `/fasolki/[id]/delete`,
+      routeParams: { id },
+    },
   ];
 }

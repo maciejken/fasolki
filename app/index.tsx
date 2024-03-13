@@ -36,22 +36,24 @@ export default function WelcomeLayout() {
 
   return (
     <View style={styles.screen}>
-      <Button
-        label="Logowanie"
-        icon={Ionicon.Login}
-        onPress={() => {
-          WebBrowser.openBrowserAsync(process.env.EXPO_PUBLIC_LOGIN_URL!);
-        }}
-        style={{ marginBottom: 24 }}
-      />
+      <View style={styles.container}>
+        <Button
+          label="Logowanie"
+          icon={Ionicon.Login}
+          onPress={() => {
+            WebBrowser.openBrowserAsync(process.env.EXPO_PUBLIC_LOGIN_URL!);
+          }}
+          style={{ marginBottom: 24 }}
+        />
 
-      <Button
-        label="Rejestracja"
-        icon={Ionicon.Signup}
-        onPress={() => {
-          WebBrowser.openBrowserAsync(process.env.EXPO_PUBLIC_SIGNUP_URL!)
-        }}
-      />
+        <Button
+          label="Rejestracja"
+          icon={Ionicon.Signup}
+          onPress={() => {
+            WebBrowser.openBrowserAsync(process.env.EXPO_PUBLIC_SIGNUP_URL!)
+          }}
+        />
+      </View>
     </View>
   );
 };
@@ -62,4 +64,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  container: {
+    width: 300
+  }
 });

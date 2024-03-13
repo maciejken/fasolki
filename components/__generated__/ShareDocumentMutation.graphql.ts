@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4ecda91efc7446f6e65eec4ba2f3c214>>
+ * @generated SignedSource<<7dd4e446d0954f85b0bdec5b61591343>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,10 +10,13 @@
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
+export type Permission = {
+  key: string;
+  value: number;
+};
 export type ShareDocumentMutation$variables = {
   id: string;
-  permissionKey: string;
-  permissionValue: number;
+  permissions: ReadonlyArray<Permission | null | undefined>;
 };
 export type ShareDocumentMutation$data = {
   readonly updateDocumentPermissions: {
@@ -37,12 +40,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "permissionKey"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "permissionValue"
+    "name": "permissions"
   }
 ],
 v1 = [
@@ -52,26 +50,9 @@ v1 = [
     "variableName": "id"
   },
   {
-    "items": [
-      {
-        "fields": [
-          {
-            "kind": "Variable",
-            "name": "key",
-            "variableName": "permissionKey"
-          },
-          {
-            "kind": "Variable",
-            "name": "value",
-            "variableName": "permissionValue"
-          }
-        ],
-        "kind": "ObjectValue",
-        "name": "permissions.0"
-      }
-    ],
-    "kind": "ListValue",
-    "name": "permissions"
+    "kind": "Variable",
+    "name": "permissions",
+    "variableName": "permissions"
   }
 ],
 v2 = {
@@ -281,16 +262,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1ec8062b24f184d76b7a156c5a851df6",
+    "cacheID": "ba22ca1adcba49a5aac6557d1d4dbde2",
     "id": null,
     "metadata": {},
     "name": "ShareDocumentMutation",
     "operationKind": "mutation",
-    "text": "mutation ShareDocumentMutation(\n  $id: String!\n  $permissionKey: String!\n  $permissionValue: Int!\n) {\n  updateDocumentPermissions(id: $id, permissions: [{key: $permissionKey, value: $permissionValue}]) {\n    viewer {\n      __typename\n      ...FasolkiViewerFragment\n      id\n    }\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment FasolkiViewerFragment on Viewer {\n  __isViewer: __typename\n  id\n  firstName\n  documents(first: 10) {\n    edges {\n      node {\n        ...CounterFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "mutation ShareDocumentMutation(\n  $id: String!\n  $permissions: [Permission]!\n) {\n  updateDocumentPermissions(id: $id, permissions: $permissions) {\n    viewer {\n      __typename\n      ...FasolkiViewerFragment\n      id\n    }\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment FasolkiViewerFragment on Viewer {\n  __isViewer: __typename\n  id\n  firstName\n  documents(first: 10) {\n    edges {\n      node {\n        ...CounterFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8381bdf79d844be5ff918de09ea3b5df";
+(node as any).hash = "4659087063e3872ddc3966bcbd6289a8";
 
 export default node;

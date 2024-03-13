@@ -7,12 +7,11 @@ import { graphql, useMutation } from "react-relay";
 const ShareDocumentMutation = graphql`
   mutation ShareDocumentMutation(
     $id: String!
-    $permissionKey: String!
-    $permissionValue: Int!
+    $permissions: [Permission]!
   ) {
   updateDocumentPermissions(
     id: $id,
-    permissions: [{ key: $permissionKey, value: $permissionValue }]
+    permissions: $permissions
     )
     {
       viewer {
@@ -34,14 +33,18 @@ export default function ShareDocument({ id, canDelete, onClose }: DeleteDocument
   const [commitMutation, isMutationInFlight] = useMutation(ShareDocumentMutation);
 
   const handleShare = () => {
-    commitMutation({
-      variables: {
-        id,
-        permissionKey,
-        permissionValue
-      },
-      onCompleted: onClose
-    });
+    if (permissionKey) {
+      commitMutation({
+        variables: {
+          id,
+          permissions: [{ key: permissionKey, value: permissionValue }]
+        },
+        onCompleted: onClose,
+        onError(msg) {
+          console.warn(msg)
+        }
+      });
+    }
   };
 
   return (
@@ -50,7 +53,7 @@ export default function ShareDocument({ id, canDelete, onClose }: DeleteDocument
         <TextInput
           value={permissionKey}
           style={styles.permissionKeyInput}
-          inputMode="text"
+          inputMode="email"
           onChangeText={setPermissionKey}
           enterKeyHint="done"
           autoFocus
@@ -64,6 +67,7 @@ export default function ShareDocument({ id, canDelete, onClose }: DeleteDocument
             { icon: Ionicon.Trash, value: 4 },
           ].map((option) =>
             <Button
+              key={`permission-value-${option.value}`}
               icon={option.icon}
               selected={option.value === permissionValue}
               onPress={() => setPermissionValue(option.value)}
@@ -97,7 +101,7 @@ const styles = StyleSheet.create({
   },
   permissionKeyInput: {
     padding: 8,
-    fontSize: 16,
+    fontSize: 18,
     marginBottom: 24
   },
   permissionValues: {

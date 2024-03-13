@@ -8,6 +8,7 @@ import { CounterFragment$key } from "./__generated__/CounterFragment.graphql";
 import getCounterOptions from "./getCounterOptions";
 import AppContext, { initialPickerState } from "@/appContext";
 import { Ionicon } from "./Icon";
+import { router } from "expo-router";
 
 const CounterFragment = graphql`
   fragment CounterFragment on Document {
@@ -147,7 +148,10 @@ export default function Counter({
 
   const handleShare = () => {
     if (canShare) {
-      console.warn("To be implemented");
+      router.navigate({
+        pathname: "/fasolki/[id]/share",
+        params: { id }
+      });
     }
   }
 

@@ -33,17 +33,19 @@ export default function DeleteDocument({ id, onClose }: DeleteDocumentProps) {
 
   return (
     <View style={styles.screen}>
-      <Button
-        label="Potwierdź"
-        icon={isMutationInFlight ? Ionicon.Time : Ionicon.Trash}
-        onPress={handleDelete}
-        style={{ marginBottom: 24 }}
-      />
-      <Button
-        label="Odrzuć"
-        icon={Ionicon.Cancel}
-        onPress={onClose}
-      />
+      <View style={styles.container}>
+        <Button
+          label="Potwierdź"
+          icon={isMutationInFlight ? Ionicon.Time : Ionicon.Trash}
+          onPress={handleDelete}
+          style={{ marginBottom: 24 }}
+        />
+        <Button
+          label="Odrzuć"
+          icon={Ionicon.Cancel}
+          onPress={onClose}
+        />
+      </View>
     </View>
   );
 }
@@ -53,6 +55,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  container: {
+    width: 300
   },
   icon: {
     position: 'absolute',

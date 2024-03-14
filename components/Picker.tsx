@@ -1,11 +1,13 @@
 import { useContext } from "react";
-import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { Modal, Pressable, StyleSheet } from "react-native";
 import { router } from 'expo-router';
 
 import Icon, { Ionicon } from "./Icon";
 import AppContext, { initialPickerState } from "@/appContext";
 import Button from "./Button";
 import { RouteTemplate, StaticRoute } from "@/appContext/types";
+import { Text, View } from "./Themed";
+import { ColorScheme, useColorScheme } from "./useColorScheme";
 
 export interface PickerOption {
   label: string;
@@ -22,8 +24,10 @@ export interface PickerProps {
   onClose?: (isValueChanged: boolean) => void;
 }
 
-export default function Picker({ items, prompt, desc, onChange }: PickerProps) {
+export default function Picker({ items, prompt, desc }: PickerProps) {
   const { setPicker } = useContext(AppContext);
+  const theme = useColorScheme();
+  const styles = getStyles(theme);
 
   const handleClose = () => {
     setPicker(initialPickerState);
@@ -58,21 +62,24 @@ export default function Picker({ items, prompt, desc, onChange }: PickerProps) {
             />
           ))}
 
-          <Icon name={Ionicon.Close} style={styles.pickerCloseIcon} />
+          <Icon
+            name={Ionicon.Close}
+            style={styles.pickerCloseIcon}
+            color={theme === 'dark' ? 'white' : 'black'}
+          />
         </View>
       </Pressable>
     </Modal>
   )
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: ColorScheme) => StyleSheet.create({
   overlay: {
     flex: 1,
     justifyContent: 'flex-end',
-    backgroundColor: 'rgba(0,0,0,0.5)'
+    backgroundColor: theme === 'dark' ? 'rgba(0,0,0,0.75)' : 'rgba(0,0,0,0.5)'
   },
   pickerContainer: {
-    backgroundColor: 'white',
     paddingBottom: 20,
     paddingHorizontal: 64,
   },
@@ -83,7 +90,6 @@ const styles = StyleSheet.create({
   },
   pickerPromptText: {
     fontSize: 22,
-    color: 'black'
   },
   pickerPromptDesc: {
     marginTop: 8,

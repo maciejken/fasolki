@@ -1,8 +1,10 @@
 import Button from "@/components/Button";
 import { Ionicon } from "@/components/Icon";
 import { useState } from "react";
-import { StyleSheet, TextInput, View } from "react-native";
+import { StyleSheet, TextInput } from "react-native";
 import { graphql, useMutation } from "react-relay";
+import { View } from "./Themed";
+import { ColorScheme, useColorScheme } from "./useColorScheme";
 
 const ShareDocumentMutation = graphql`
   mutation ShareDocumentMutation(
@@ -24,13 +26,14 @@ const ShareDocumentMutation = graphql`
 interface DeleteDocumentProps {
   id: string;
   onClose(): void;
-  canDelete?: boolean;
 }
 
-export default function ShareDocument({ id, canDelete, onClose }: DeleteDocumentProps) {
+export default function ShareDocument({ id, onClose }: DeleteDocumentProps) {
   const [permissionKey, setPermissionKey] = useState("");
   const [permissionValue, setPermissionValue] = useState(1);
   const [commitMutation, isMutationInFlight] = useMutation(ShareDocumentMutation);
+  const theme = useColorScheme();
+  const styles = getStyles(theme);
 
   const handleShare = () => {
     if (permissionKey) {
@@ -58,6 +61,7 @@ export default function ShareDocument({ id, canDelete, onClose }: DeleteDocument
           enterKeyHint="done"
           autoFocus
           placeholder="email lub nazwa grupy"
+          placeholderTextColor="#aaa"
         />
         <View style={styles.permissionValues}>
           {[
@@ -69,7 +73,7 @@ export default function ShareDocument({ id, canDelete, onClose }: DeleteDocument
             <Button
               key={`permission-value-${option.value}`}
               icon={option.icon}
-              selected={option.value === permissionValue}
+              primary={option.value === permissionValue}
               onPress={() => setPermissionValue(option.value)}
             />)}
         </View>
@@ -83,23 +87,24 @@ export default function ShareDocument({ id, canDelete, onClose }: DeleteDocument
           label="Odrzuć"
           icon={Ionicon.Cancel}
           onPress={onClose}
+          primary
         />
       </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: ColorScheme) => StyleSheet.create({
   screen: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white'
   },
   container: {
     width: 300
   },
   permissionKeyInput: {
+    color: theme === 'dark' ? 'white' : 'black',
     padding: 8,
     fontSize: 18,
     marginBottom: 24

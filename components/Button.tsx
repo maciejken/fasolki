@@ -7,13 +7,13 @@ interface ButtonProps {
   label?: string;
   style?: StyleProp<ViewStyle>;
   onPress?: () => void;
-  selected?: boolean;
+  primary?: boolean;
 }
 
-export default function Button({ label, icon, onPress, selected, style }: ButtonProps) {
+export default function Button({ label, icon, onPress, primary, style }: ButtonProps) {
   return (
     <Pressable
-      style={[styles.button, (selected ? styles.selected : {}), style]}
+      style={[styles.button, (primary ? styles.primary : {}), style]}
       onPress={onPress}
     >
       {label && <Text style={styles.buttonText}>{label}</Text>}
@@ -31,9 +31,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  selected: {
-    borderWidth: 1,
-    borderColor: 'black'
+  primary: {
+    backgroundColor: '#bbb'
   },
   icon: {
     position: 'absolute',

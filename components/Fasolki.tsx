@@ -25,7 +25,7 @@ export default function Fasolki() {
   let data = useLazyLoadQuery<FasolkiQueryType>(
     FasolkiQuery,
     {},
-    { fetchKey, fetchPolicy: 'network-only' }
+    { fetchKey, fetchPolicy: 'store-or-network' }
   );
 
   const refresh = React.useCallback(() => {

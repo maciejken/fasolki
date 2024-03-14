@@ -4,6 +4,7 @@ import { FasolkiViewerFragment$key } from "./__generated__/FasolkiViewerFragment
 import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import Counter from "./Counter";
 import CounterComposer from "./CounterComposer";
+import { ColorScheme, useColorScheme } from "./useColorScheme";
 
 const FasolkiViewerFragment = graphql`
   fragment FasolkiViewerFragment on Viewer
@@ -39,6 +40,9 @@ export default function FasolkiView({ viewer, refreshing, refresh }: FasolkiView
 
   const refreshControl = <RefreshControl refreshing={refreshing} onRefresh={refresh} />;
 
+  const theme = useColorScheme();
+  const styles = getStyles(theme);
+
   return (
     <View style={styles.screen}>
       <CounterComposer viewerId={data.id} />
@@ -53,13 +57,13 @@ export default function FasolkiView({ viewer, refreshing, refresh }: FasolkiView
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: ColorScheme) => StyleSheet.create({
   screen: {
     flex: 1,
   },
   listContainer: {
     flexGrow: 1,
-    backgroundColor: 'white'
+    backgroundColor: theme === 'dark' ? 'black' : 'white'
   },
   button: {
     paddingVertical: 16,

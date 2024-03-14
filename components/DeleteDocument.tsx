@@ -1,6 +1,6 @@
 import Button from "@/components/Button";
-import Icon, { Ionicon } from "@/components/Icon";
-import { StyleSheet, Text, View } from "react-native";
+import { Ionicon } from "@/components/Icon";
+import { StyleSheet, View } from "react-native";
 import { graphql, useMutation } from "react-relay";
 
 const DeleteDocumentMutation = graphql`
@@ -44,6 +44,7 @@ export default function DeleteDocument({ id, onClose }: DeleteDocumentProps) {
           label="Odrzuć"
           icon={Ionicon.Cancel}
           onPress={onClose}
+          primary
         />
       </View>
     </View>

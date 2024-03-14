@@ -1,5 +1,5 @@
 import React, { createRef, useContext, useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, StyleSheet, TextInput } from "react-native";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { graphql } from "relay-runtime";
 import { useFragment, useMutation } from "react-relay";
@@ -7,8 +7,10 @@ import { useFragment, useMutation } from "react-relay";
 import { CounterFragment$key } from "./__generated__/CounterFragment.graphql";
 import getCounterOptions from "./getCounterOptions";
 import AppContext, { initialPickerState } from "@/appContext";
-import { Ionicon } from "./Icon";
+import Icon, { Ionicon } from "./Icon";
 import { router } from "expo-router";
+import { Text, View } from "./Themed";
+import { ColorScheme, useColorScheme } from "./useColorScheme";
 
 const CounterFragment = graphql`
   fragment CounterFragment on Document {
@@ -80,6 +82,9 @@ export default function Counter({
   const contentInputRef = createRef<TextInput>();
   const isLoading = isUpdateInFlight;
   const editing = titleFocused || contentFocused;
+
+  const theme = useColorScheme();
+  const styles = getStyles(theme);
 
   const handlePressTitle = () => {
     if (canEdit) {
@@ -194,7 +199,7 @@ export default function Counter({
         {editing && <TextInput
           ref={titleInputRef}
           value={counterTitle}
-          style={styles.counterTitle}
+          style={[styles.counterTitle, styles.counterInput]}
           editable={canEdit}
           inputMode="text"
           onChangeText={handleInputTitle}
@@ -210,7 +215,7 @@ export default function Counter({
         {editing && <TextInput
           ref={contentInputRef}
           value={counterContent}
-          style={styles.counterContent}
+          style={[styles.counterContent, styles.counterInput]}
           editable={canEdit}
           inputMode="numeric"
           onChangeText={handleInputContent}
@@ -222,14 +227,14 @@ export default function Counter({
         />}
       </View>
       <View style={styles.actions}>
-        <Ionicons
+        <Icon
           name={getIconName({
             accessLevel: accessLevel || 0,
             canSave,
             isLoading,
           })}
           size={24}
-          color={canEdit ? 'black' : '#aaa'}
+          color={theme === 'dark' ? 'white' : 'black'}
           onPress={handleActions}
         />
       </View>
@@ -237,7 +242,7 @@ export default function Counter({
   )
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: ColorScheme) => StyleSheet.create({
   counter: {
     flexDirection: 'row',
     width: '100%',
@@ -254,6 +259,9 @@ const styles = StyleSheet.create({
     fontSize: 24,
     minWidth: 150,
     textAlign: 'right'
+  },
+  counterInput: {
+    color: theme === 'dark' ? 'white' : 'black',
   },
   counterData: {
     flexDirection: 'row',

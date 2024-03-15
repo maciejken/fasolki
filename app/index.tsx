@@ -1,17 +1,18 @@
 import * as Linking from 'expo-linking';
-import { router } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import React, { useContext, useEffect } from 'react';
 import * as WebBrowser from 'expo-web-browser';
 
 import AppContext from '@/appContext';
-import Icon, { Ionicon } from '@/components/Icon';
+import { Ionicon } from '@/components/Icon';
 import Button from '@/components/Button';
 import { restoreToken, saveToken } from '@/appContext/secureStore';
+import { useAppRouter } from '@/components/useAppRouter';
 
 export default function WelcomeLayout() {
   const { setToken } = useContext(AppContext);
   const url = Linking.useURL();
+  const { goHome } = useAppRouter();
 
   useEffect(() => {
     if (url) {
@@ -29,7 +30,7 @@ export default function WelcomeLayout() {
     restoreToken().then((token: string | null) => {
       if (token) {
         setToken(token);
-        router.replace('/fasolki/');
+        goHome();
       }
     });
   }, []);

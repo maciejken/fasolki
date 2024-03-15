@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<868a6e7783d8c5f11d81a7c6ecdeeeaf>>
+ * @generated SignedSource<<50272fcc385bb380b1cbb82c45bd657d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,9 +22,6 @@ export type CounterComposerMutation$data = {
       readonly node: {
         readonly " $fragmentSpreads": FragmentRefs<"CounterFragment">;
       } | null | undefined;
-    } | null | undefined;
-    readonly viewer: {
-      readonly " $fragmentSpreads": FragmentRefs<"FasolkiViewerFragment">;
     } | null | undefined;
   } | null | undefined;
 };
@@ -70,56 +67,7 @@ v4 = [
     "name": "type",
     "variableName": "type"
   }
-],
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "__typename",
-  "storageKey": null
-},
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v7 = [
-  {
-    "kind": "Literal",
-    "name": "first",
-    "value": 10
-  }
-],
-v8 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "type",
-  "storageKey": null
-},
-v9 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "title",
-  "storageKey": null
-},
-v10 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "content",
-  "storageKey": null
-},
-v11 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "accessLevel",
-  "storageKey": null
-};
+];
 return {
   "fragment": {
     "argumentDefinitions": [
@@ -135,27 +83,11 @@ return {
       {
         "alias": null,
         "args": (v4/*: any*/),
-        "concreteType": "AddDocumentMutationResponse",
+        "concreteType": "DocumentMutationResponseWithEdge",
         "kind": "LinkedField",
         "name": "addDocument",
         "plural": false,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": null,
-            "kind": "LinkedField",
-            "name": "viewer",
-            "plural": false,
-            "selections": [
-              {
-                "args": null,
-                "kind": "FragmentSpread",
-                "name": "FasolkiViewerFragment"
-              }
-            ],
-            "storageKey": null
-          },
           {
             "alias": null,
             "args": null,
@@ -204,115 +136,11 @@ return {
       {
         "alias": null,
         "args": (v4/*: any*/),
-        "concreteType": "AddDocumentMutationResponse",
+        "concreteType": "DocumentMutationResponseWithEdge",
         "kind": "LinkedField",
         "name": "addDocument",
         "plural": false,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": null,
-            "kind": "LinkedField",
-            "name": "viewer",
-            "plural": false,
-            "selections": [
-              (v5/*: any*/),
-              {
-                "kind": "TypeDiscriminator",
-                "abstractKey": "__isViewer"
-              },
-              (v6/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "firstName",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": (v7/*: any*/),
-                "concreteType": "DocumentsConnection",
-                "kind": "LinkedField",
-                "name": "documents",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "DocumentsConnectionEdge",
-                    "kind": "LinkedField",
-                    "name": "edges",
-                    "plural": true,
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "Document",
-                        "kind": "LinkedField",
-                        "name": "node",
-                        "plural": false,
-                        "selections": [
-                          (v6/*: any*/),
-                          (v8/*: any*/),
-                          (v9/*: any*/),
-                          (v10/*: any*/),
-                          (v11/*: any*/),
-                          (v5/*: any*/)
-                        ],
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "cursor",
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "PageInfo",
-                    "kind": "LinkedField",
-                    "name": "pageInfo",
-                    "plural": false,
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "endCursor",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "hasNextPage",
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": "documents(first:10)"
-              },
-              {
-                "alias": null,
-                "args": (v7/*: any*/),
-                "filters": null,
-                "handle": "connection",
-                "key": "FasolkiViewerFragment_documents",
-                "kind": "LinkedHandle",
-                "name": "documents"
-              }
-            ],
-            "storageKey": null
-          },
           {
             "alias": null,
             "args": null,
@@ -329,11 +157,41 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v6/*: any*/),
-                  (v8/*: any*/),
-                  (v9/*: any*/),
-                  (v10/*: any*/),
-                  (v11/*: any*/)
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "id",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "type",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "title",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "content",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "accessLevel",
+                    "storageKey": null
+                  }
                 ],
                 "storageKey": null
               }
@@ -362,16 +220,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "7b3b9e016d600ffe03e295a3a89ceffd",
+    "cacheID": "d3f0ca7adb9426fc7ff4a44b6c4c0379",
     "id": null,
     "metadata": {},
     "name": "CounterComposerMutation",
     "operationKind": "mutation",
-    "text": "mutation CounterComposerMutation(\n  $type: String!\n  $title: String\n  $content: String!\n) {\n  addDocument(type: $type, title: $title, content: $content) {\n    viewer {\n      __typename\n      ...FasolkiViewerFragment\n      id\n    }\n    documentEdge {\n      node {\n        ...CounterFragment\n        id\n      }\n    }\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment FasolkiViewerFragment on Viewer {\n  __isViewer: __typename\n  id\n  firstName\n  documents(first: 10) {\n    edges {\n      node {\n        ...CounterFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "mutation CounterComposerMutation(\n  $type: String!\n  $title: String\n  $content: String!\n) {\n  addDocument(type: $type, title: $title, content: $content) {\n    documentEdge {\n      node {\n        ...CounterFragment\n        id\n      }\n    }\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e04378b107596ec9c024cad72d37cf5d";
+(node as any).hash = "00bda580603b92203443c96d69f8c132";
 
 export default node;

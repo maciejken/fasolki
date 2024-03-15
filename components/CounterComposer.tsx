@@ -5,12 +5,6 @@ import { ConnectionHandler, graphql } from "relay-runtime";
 import { useMutation } from "react-relay";
 import { Ionicon } from "./Icon";
 
-const CounterComposerFragment = graphql`
-  fragment CounterComposerFragment on Document {
-    id
-  }
-`;
-
 const CounterComposerMutation = graphql`
   mutation CounterComposerMutation(
     $type: String!,
@@ -23,9 +17,6 @@ const CounterComposerMutation = graphql`
       title: $title,
       content: $content
     ) {
-      viewer {
-        ...FasolkiViewerFragment
-      }
       documentEdge
         @prependEdge(connections: $connections)
       {

@@ -12,8 +12,7 @@ import { ColorScheme, useColorScheme } from "./useColorScheme";
 export interface PickerOption {
   label: string;
   icon: Ionicon;
-  route: StaticRoute | RouteTemplate;
-  routeParams?: Record<'id', string>;
+  action?: () => void;
 }
 
 export interface PickerProps {
@@ -46,16 +45,15 @@ export default function Picker({ items, prompt, desc }: PickerProps) {
             {desc && <Text style={styles.pickerPromptDesc}>{desc}</Text>}
           </View>
 
-          {items.map((option) => (
+          {items.map((option, index) => (
             <Button
-              key={option.route}
+              key={`picker-option-${index}`}
               label={option.label}
               icon={option.icon}
               onPress={() => {
-                router.navigate({
-                  pathname: option.route,
-                  params: option.routeParams
-                });
+                if ('function' === typeof option.action) {
+                  option.action();
+                }
                 handleClose();
               }}
               style={{ marginBottom: 16 }}

@@ -71,13 +71,13 @@ input Permission {
 }
 
 type Mutation {
-  addDocument(type: String!, title: String, content: String!): AddDocumentMutationResponse
-  updateDocument(id: String!, title: String, content: String): DocumentMutationResponse
+  addDocument(type: String!, title: String, content: String!): DocumentMutationResponseWithEdge
+  updateDocument(id: String!, title: String, content: String): DocumentMutationResponseWithEdge
   updateDocumentPermissions(id: String!, permissions: [Permission]!): DocumentMutationResponse
   deleteDocument(id: String!): DocumentMutationResponse
 }
 
-type AddDocumentMutationResponse {
+type DocumentMutationResponseWithEdge {
   viewer: Viewer
   documentEdge: DocumentsConnectionEdge
 }

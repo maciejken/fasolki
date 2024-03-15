@@ -1,16 +1,15 @@
 import React, { createRef, useContext, useState } from "react";
 import { Pressable, StyleSheet, TextInput } from "react-native";
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { graphql } from "relay-runtime";
 import { useFragment, useMutation } from "react-relay";
 
 import { CounterFragment$key } from "./__generated__/CounterFragment.graphql";
-import getCounterOptions from "./getCounterOptions";
+import { useCounterOptions } from "./useCounterOptions";
 import AppContext, { initialPickerState } from "@/appContext";
 import Icon, { Ionicon } from "./Icon";
-import { router } from "expo-router";
 import { Text, View } from "./Themed";
 import { ColorScheme, useColorScheme } from "./useColorScheme";
+import { useAppRouter } from "./useAppRouter";
 
 const CounterFragment = graphql`
   fragment CounterFragment on Document {
@@ -19,7 +18,14 @@ const CounterFragment = graphql`
     title
     content
     accessLevel
-    # createdAt
+  }
+`;
+
+const CounterUpdateFragment = graphql`
+  fragment CounterUpdateFragment on DocumentsConnectionEdge {
+    node {
+      ...CounterFragment
+    }
   }
 `;
 
@@ -34,8 +40,8 @@ const CounterMutation = graphql`
       title: $title,
       content: $content
     ) {
-      viewer {
-        ...FasolkiViewerFragment
+      documentEdge {
+        ...CounterUpdateFragment
       }
     }
   }
@@ -44,8 +50,6 @@ const CounterMutation = graphql`
 interface CounterProps {
   document: CounterFragment$key;
 }
-
-const getIconColor = (enabled: boolean) => enabled ? 'black' : 'white';
 
 const icons: Record<string, Ionicon> = {
   1: Ionicon.Lock,
@@ -82,6 +86,7 @@ export default function Counter({
   const contentInputRef = createRef<TextInput>();
   const isLoading = isUpdateInFlight;
   const editing = titleFocused || contentFocused;
+  const { shareDocument } = useAppRouter();
 
   const theme = useColorScheme();
   const styles = getStyles(theme);
@@ -153,10 +158,7 @@ export default function Counter({
 
   const handleShare = () => {
     if (canShare) {
-      router.navigate({
-        pathname: "/fasolki/[id]/share",
-        params: { id }
-      });
+      shareDocument({ id });
     }
   }
 
@@ -172,9 +174,8 @@ export default function Counter({
 
     if (hasPicker) {
       setPicker({
-        items: getCounterOptions(id),
+        items: useCounterOptions(id),
         prompt: title || id,
-        // desc: `Utworzono ${new Intl.DateTimeFormat('pl').format(new Date(createdAt))}`,
         onClose: handlePickerClose,
       });
     } else if (shouldSave) {

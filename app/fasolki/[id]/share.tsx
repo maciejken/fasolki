@@ -1,12 +1,10 @@
 import ShareDocument from "@/components/ShareDocument";
-import { router, useLocalSearchParams } from "expo-router";
+import { useAppRouter } from "@/components/useAppRouter";
+import { useLocalSearchParams } from "expo-router";
 
 export default function ShareScreen() {
   const { id } = useLocalSearchParams();
+  const { goHome } = useAppRouter();
 
-  const handleClose = () => {
-    router.replace('/fasolki/');
-  };
-
-  return <ShareDocument id={id as string} onClose={handleClose} />
+  return <ShareDocument id={id as string} onClose={goHome} />
 }

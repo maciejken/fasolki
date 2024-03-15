@@ -51,6 +51,7 @@ export default function ShareDocument({ id, onClose }: DeleteDocumentProps) {
   };
 
   return (
+    // @TODO: add `Utworzono ${new Intl.DateTimeFormat('pl').format(new Date(createdAt))}`
     <View style={styles.screen}>
       <View style={styles.container}>
         <TextInput

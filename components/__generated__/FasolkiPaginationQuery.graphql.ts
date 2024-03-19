@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fbc877d9688a2c0850a5659bea753c80>>
+ * @generated SignedSource<<26390f6aaad0fe1301aaa5f0545eacba>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,38 +10,58 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type FasolkiQuery$variables = Record<PropertyKey, never>;
-export type FasolkiQuery$data = {
+export type FasolkiPaginationQuery$variables = {
+  count?: number | null | undefined;
+  cursor?: string | null | undefined;
+};
+export type FasolkiPaginationQuery$data = {
   readonly viewer: {
     readonly " $fragmentSpreads": FragmentRefs<"FasolkiViewerFragment">;
   } | null | undefined;
 };
-export type FasolkiQuery = {
-  response: FasolkiQuery$data;
-  variables: FasolkiQuery$variables;
+export type FasolkiPaginationQuery = {
+  response: FasolkiPaginationQuery$data;
+  variables: FasolkiPaginationQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
+var v0 = [
+  {
+    "defaultValue": 10,
+    "kind": "LocalArgument",
+    "name": "count"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "cursor"
+  }
+],
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v1 = [
+v2 = [
   {
-    "kind": "Literal",
+    "kind": "Variable",
+    "name": "after",
+    "variableName": "cursor"
+  },
+  {
+    "kind": "Variable",
     "name": "first",
-    "value": 10
+    "variableName": "count"
   }
 ];
 return {
   "fragment": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "FasolkiQuery",
+    "name": "FasolkiPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -52,7 +72,18 @@ return {
         "plural": false,
         "selections": [
           {
-            "args": null,
+            "args": [
+              {
+                "kind": "Variable",
+                "name": "count",
+                "variableName": "count"
+              },
+              {
+                "kind": "Variable",
+                "name": "cursor",
+                "variableName": "cursor"
+              }
+            ],
             "kind": "FragmentSpread",
             "name": "FasolkiViewerFragment"
           }
@@ -65,9 +96,9 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "FasolkiQuery",
+    "name": "FasolkiPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -77,10 +108,10 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
+          (v1/*: any*/),
           {
             "alias": null,
-            "args": (v1/*: any*/),
+            "args": (v2/*: any*/),
             "concreteType": "DocumentsConnection",
             "kind": "LinkedField",
             "name": "documents",
@@ -102,7 +133,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v0/*: any*/),
+                      (v1/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -177,11 +208,11 @@ return {
                 "storageKey": null
               }
             ],
-            "storageKey": "documents(first:10)"
+            "storageKey": null
           },
           {
             "alias": null,
-            "args": (v1/*: any*/),
+            "args": (v2/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "FasolkiViewerFragment_documents",
@@ -194,16 +225,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "935ee700a5c22b3521dea3aa9a9b0cac",
+    "cacheID": "b9a1851fc10a4733000a23a421824a54",
     "id": null,
     "metadata": {},
-    "name": "FasolkiQuery",
+    "name": "FasolkiPaginationQuery",
     "operationKind": "query",
-    "text": "query FasolkiQuery {\n  viewer {\n    ...FasolkiViewerFragment\n    id\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment FasolkiViewerFragment on Viewer {\n  id\n  documents(first: 10) {\n    edges {\n      node {\n        ...CounterFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query FasolkiPaginationQuery(\n  $count: Int = 10\n  $cursor: String\n) {\n  viewer {\n    ...FasolkiViewerFragment_1G22uz\n    id\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment FasolkiViewerFragment_1G22uz on Viewer {\n  id\n  documents(first: $count, after: $cursor) {\n    edges {\n      node {\n        ...CounterFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "31b13978a781839cd5972c185cc359c8";
+(node as any).hash = "80a2f52c26549185925fbc3093c490b6";
 
 export default node;

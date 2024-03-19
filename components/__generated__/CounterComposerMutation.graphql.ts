@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<868a6e7783d8c5f11d81a7c6ecdeeeaf>>
+ * @generated SignedSource<<3023e327763bc52df667c71be35c0153>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -75,45 +75,38 @@ v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "__typename",
-  "storageKey": null
-},
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v7 = [
+v6 = [
   {
     "kind": "Literal",
     "name": "first",
     "value": 10
   }
 ],
-v8 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "type",
   "storageKey": null
 },
-v9 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "title",
   "storageKey": null
 },
-v10 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "content",
   "storageKey": null
 },
-v11 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -143,7 +136,7 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": null,
+            "concreteType": "Viewer",
             "kind": "LinkedField",
             "name": "viewer",
             "plural": false,
@@ -212,27 +205,15 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": null,
+            "concreteType": "Viewer",
             "kind": "LinkedField",
             "name": "viewer",
             "plural": false,
             "selections": [
               (v5/*: any*/),
               {
-                "kind": "TypeDiscriminator",
-                "abstractKey": "__isViewer"
-              },
-              (v6/*: any*/),
-              {
                 "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "firstName",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": (v7/*: any*/),
+                "args": (v6/*: any*/),
                 "concreteType": "DocumentsConnection",
                 "kind": "LinkedField",
                 "name": "documents",
@@ -254,12 +235,18 @@ return {
                         "name": "node",
                         "plural": false,
                         "selections": [
-                          (v6/*: any*/),
+                          (v5/*: any*/),
+                          (v7/*: any*/),
                           (v8/*: any*/),
                           (v9/*: any*/),
                           (v10/*: any*/),
-                          (v11/*: any*/),
-                          (v5/*: any*/)
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "__typename",
+                            "storageKey": null
+                          }
                         ],
                         "storageKey": null
                       },
@@ -303,7 +290,7 @@ return {
               },
               {
                 "alias": null,
-                "args": (v7/*: any*/),
+                "args": (v6/*: any*/),
                 "filters": null,
                 "handle": "connection",
                 "key": "FasolkiViewerFragment_documents",
@@ -329,11 +316,11 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v6/*: any*/),
+                  (v5/*: any*/),
+                  (v7/*: any*/),
                   (v8/*: any*/),
                   (v9/*: any*/),
-                  (v10/*: any*/),
-                  (v11/*: any*/)
+                  (v10/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -362,12 +349,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "7b3b9e016d600ffe03e295a3a89ceffd",
+    "cacheID": "d508a2eca6155a8940cb6a4e2477cd49",
     "id": null,
     "metadata": {},
     "name": "CounterComposerMutation",
     "operationKind": "mutation",
-    "text": "mutation CounterComposerMutation(\n  $type: String!\n  $title: String\n  $content: String!\n) {\n  addDocument(type: $type, title: $title, content: $content) {\n    viewer {\n      __typename\n      ...FasolkiViewerFragment\n      id\n    }\n    documentEdge {\n      node {\n        ...CounterFragment\n        id\n      }\n    }\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment FasolkiViewerFragment on Viewer {\n  __isViewer: __typename\n  id\n  firstName\n  documents(first: 10) {\n    edges {\n      node {\n        ...CounterFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "mutation CounterComposerMutation(\n  $type: String!\n  $title: String\n  $content: String!\n) {\n  addDocument(type: $type, title: $title, content: $content) {\n    viewer {\n      ...FasolkiViewerFragment\n      id\n    }\n    documentEdge {\n      node {\n        ...CounterFragment\n        id\n      }\n    }\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment FasolkiViewerFragment on Viewer {\n  id\n  documents(first: 10) {\n    edges {\n      node {\n        ...CounterFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();

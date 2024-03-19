@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<34b43eab5ccfd07336b98b182ecd373c>>
+ * @generated SignedSource<<ff63e67ebefd92e0beeeb16820dc3a05>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -64,17 +64,10 @@ v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "__typename",
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v6 = [
+v5 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -103,7 +96,7 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": null,
+            "concreteType": "Viewer",
             "kind": "LinkedField",
             "name": "viewer",
             "plural": false,
@@ -144,27 +137,15 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": null,
+            "concreteType": "Viewer",
             "kind": "LinkedField",
             "name": "viewer",
             "plural": false,
             "selections": [
               (v4/*: any*/),
               {
-                "kind": "TypeDiscriminator",
-                "abstractKey": "__isViewer"
-              },
-              (v5/*: any*/),
-              {
                 "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "firstName",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": (v6/*: any*/),
+                "args": (v5/*: any*/),
                 "concreteType": "DocumentsConnection",
                 "kind": "LinkedField",
                 "name": "documents",
@@ -186,7 +167,7 @@ return {
                         "name": "node",
                         "plural": false,
                         "selections": [
-                          (v5/*: any*/),
+                          (v4/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -215,7 +196,13 @@ return {
                             "name": "accessLevel",
                             "storageKey": null
                           },
-                          (v4/*: any*/)
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "__typename",
+                            "storageKey": null
+                          }
                         ],
                         "storageKey": null
                       },
@@ -259,7 +246,7 @@ return {
               },
               {
                 "alias": null,
-                "args": (v6/*: any*/),
+                "args": (v5/*: any*/),
                 "filters": null,
                 "handle": "connection",
                 "key": "FasolkiViewerFragment_documents",
@@ -275,12 +262,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b66983eddd24581c7fd1ad666682062f",
+    "cacheID": "55967f72f679ca137f1f0a097221878e",
     "id": null,
     "metadata": {},
     "name": "CounterMutation",
     "operationKind": "mutation",
-    "text": "mutation CounterMutation(\n  $id: String!\n  $title: String\n  $content: String\n) {\n  updateDocument(id: $id, title: $title, content: $content) {\n    viewer {\n      __typename\n      ...FasolkiViewerFragment\n      id\n    }\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment FasolkiViewerFragment on Viewer {\n  __isViewer: __typename\n  id\n  firstName\n  documents(first: 10) {\n    edges {\n      node {\n        ...CounterFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "mutation CounterMutation(\n  $id: String!\n  $title: String\n  $content: String\n) {\n  updateDocument(id: $id, title: $title, content: $content) {\n    viewer {\n      ...FasolkiViewerFragment\n      id\n    }\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment FasolkiViewerFragment on Viewer {\n  id\n  documents(first: 10) {\n    edges {\n      node {\n        ...CounterFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();

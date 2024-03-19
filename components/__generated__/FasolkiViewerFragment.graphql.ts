@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3e462ebc3b1387bec1f84cf117803c9e>>
+ * @generated SignedSource<<23289489ae2680e6686e0af296937ef1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type FasolkiViewerFragment$data = {
   readonly documents: {
@@ -18,7 +18,6 @@ export type FasolkiViewerFragment$data = {
       } | null | undefined;
     } | null | undefined> | null | undefined;
   } | null | undefined;
-  readonly firstName: string | null | undefined;
   readonly id: string;
   readonly " $fragmentType": "FasolkiViewerFragment";
 };
@@ -27,7 +26,11 @@ export type FasolkiViewerFragment$key = {
   readonly " $fragmentSpreads": FragmentRefs<"FasolkiViewerFragment">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = [
+  "documents"
+];
+return {
   "argumentDefinitions": [
     {
       "defaultValue": 10,
@@ -47,11 +50,23 @@ const node: ReaderFragment = {
         "count": "count",
         "cursor": "cursor",
         "direction": "forward",
-        "path": [
-          "documents"
-        ]
+        "path": (v0/*: any*/)
       }
-    ]
+    ],
+    "refetch": {
+      "connection": {
+        "forward": {
+          "count": "count",
+          "cursor": "cursor"
+        },
+        "backward": null,
+        "path": (v0/*: any*/)
+      },
+      "fragmentPathInResult": [
+        "viewer"
+      ],
+      "operation": require('./FasolkiPaginationQuery.graphql')
+    }
   },
   "name": "FasolkiViewerFragment",
   "selections": [
@@ -60,13 +75,6 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "ScalarField",
       "name": "id",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "firstName",
       "storageKey": null
     },
     {
@@ -148,9 +156,10 @@ const node: ReaderFragment = {
     }
   ],
   "type": "Viewer",
-  "abstractKey": "__isViewer"
+  "abstractKey": null
 };
+})();
 
-(node as any).hash = "3dad8e077024cf3f99ae4956bbbdb0df";
+(node as any).hash = "80a2f52c26549185925fbc3093c490b6";
 
 export default node;

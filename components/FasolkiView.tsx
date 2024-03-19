@@ -10,7 +10,7 @@ import { page } from "@/constants";
 const FasolkiViewerFragment = graphql`
   fragment FasolkiViewerFragment on Viewer
   @argumentDefinitions(
-    count: { type: "Int", defaultValue: 10 }
+    count: { type: "Int", defaultValue: 20 }
     cursor: { type: "String" }
   )
   @refetchable(queryName: "FasolkiPaginationQuery") {

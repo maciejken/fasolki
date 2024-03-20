@@ -69,28 +69,29 @@ export default function FasolkiView({
   );
 }
 
-const getStyles = (theme: ColorScheme) => StyleSheet.create({
-  screen: {
-    flex: 1,
-  },
-  listContainer: {
-    flexGrow: 1,
-    backgroundColor: theme === 'dark' ? 'black' : 'white'
-  },
-  button: {
-    paddingVertical: 16,
-    marginVertical: 12,
-    width: 300,
-    backgroundColor: "#eee",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  buttonText: {
-    fontSize: 18,
-  },
-  icon: {
-    position: "absolute",
-    right: 24,
-  },
-});
+const getStyles = (theme: ColorScheme) =>
+  StyleSheet.create({
+    screen: {
+      flex: 1,
+    },
+    listContainer: {
+      flexGrow: 1,
+      backgroundColor: theme === "dark" ? "black" : "white",
+    },
+    button: {
+      paddingVertical: 16,
+      marginVertical: 12,
+      width: 300,
+      backgroundColor: "#eee",
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    buttonText: {
+      fontSize: 18,
+    },
+    icon: {
+      position: "absolute",
+      right: 24,
+    },
+  });

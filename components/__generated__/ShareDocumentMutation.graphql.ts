@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a46d9eea0723281cd5c7d1dd710e2d21>>
+ * @generated SignedSource<<4d6dde3797c35e68bf8a3ea7fe0214d3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -66,7 +66,7 @@ v3 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 10
+    "value": 20
   }
 ];
 return {
@@ -229,7 +229,7 @@ return {
                     "storageKey": null
                   }
                 ],
-                "storageKey": "documents(first:10)"
+                "storageKey": "documents(first:20)"
               },
               {
                 "alias": null,
@@ -249,12 +249,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "61476c9bb9ab5371cd495118bda3fc39",
+    "cacheID": "ddb5d55c111b8a4e3f3b64fd567db625",
     "id": null,
     "metadata": {},
     "name": "ShareDocumentMutation",
     "operationKind": "mutation",
-    "text": "mutation ShareDocumentMutation(\n  $id: String!\n  $permissions: [Permission]!\n) {\n  updateDocumentPermissions(id: $id, permissions: $permissions) {\n    viewer {\n      ...FasolkiViewerFragment\n      id\n    }\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment FasolkiViewerFragment on Viewer {\n  id\n  documents(first: 10) {\n    edges {\n      node {\n        ...CounterFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "mutation ShareDocumentMutation(\n  $id: String!\n  $permissions: [Permission]!\n) {\n  updateDocumentPermissions(id: $id, permissions: $permissions) {\n    viewer {\n      ...FasolkiViewerFragment\n      id\n    }\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment FasolkiViewerFragment on Viewer {\n  id\n  documents(first: 20) {\n    edges {\n      node {\n        ...CounterFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();

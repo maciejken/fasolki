@@ -1,25 +1,19 @@
 import { createRef, useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
-import Ionicons from '@expo/vector-icons/Ionicons';
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { ConnectionHandler, graphql } from "relay-runtime";
 import { useMutation } from "react-relay";
 import { Ionicon } from "./Icon";
 
 const CounterComposerMutation = graphql`
   mutation CounterComposerMutation(
-    $type: String!,
-    $title: String,
-    $content: String!,
-    $connections: [ID!]!,
+    $type: String!
+    $title: String
+    $content: String!
+    $connections: [ID!]!
   ) {
-    addDocument(
-      type: $type,
-      title: $title,
-      content: $content
-    ) {
-      documentEdge
-        @prependEdge(connections: $connections)
-      {
+    addDocument(type: $type, title: $title, content: $content) {
+      documentEdge @prependEdge(connections: $connections) {
         node {
           ...CounterFragment
         }
@@ -32,21 +26,26 @@ interface CounterComposerProps {
   viewerId: string;
 }
 
-const getIconName = (canSave: boolean, loading: boolean) => {
-  if (loading) return Ionicon.Time;
-
+const getIconName = (editing: boolean, canSave: boolean, loading: boolean) => {
+  if (!editing) {
+    return Ionicon.Add;
+  } else if (loading) {
+    return Ionicon.Time;
+  }
   return canSave ? Ionicon.Save : Ionicon.Close;
-}
+};
 
 export default function CounterComposer({ viewerId }: CounterComposerProps) {
-
   const [counterTitle, setCounterTitle] = useState("");
   const [counterContent, setCounterContent] = useState("");
+  const [editing, setEditing] = useState(false);
   const [canSave, setCanSave] = useState(false);
   const titleInputRef = createRef<TextInput>();
   const contentInputRef = createRef<TextInput>();
 
-  const [commitMutation, isMutationInFlight] = useMutation(CounterComposerMutation);
+  const [commitMutation, isMutationInFlight] = useMutation(
+    CounterComposerMutation
+  );
 
   const handleChangeTitle = (value: string) => {
     setCounterTitle(value);
@@ -58,19 +57,24 @@ export default function CounterComposer({ viewerId }: CounterComposerProps) {
     setCanSave(!!value);
   };
 
+  const handleEdit = () => {
+    setEditing(true);
+    titleInputRef.current?.focus();
+  };
+
   const handleSubmitTitle = () => {
     contentInputRef.current?.focus();
-  }
+  };
 
   const handleSubmitUpdate = () => {
     if (canSave) {
       const connectionId = ConnectionHandler.getConnectionID(
         viewerId,
-        'FasolkiViewerFragment_documents',
+        "FasolkiViewerFragment_documents"
       );
       commitMutation({
         variables: {
-          type: 'counter',
+          type: "counter",
           title: counterTitle,
           content: counterContent,
           connections: [connectionId],
@@ -78,15 +82,18 @@ export default function CounterComposer({ viewerId }: CounterComposerProps) {
         onCompleted() {
           setCounterTitle("");
           setCounterContent("");
-        }
-      })
+          setEditing(false);
+        },
+      });
       setCanSave(false);
+    } else {
+      setEditing(false);
     }
     titleInputRef.current?.blur();
     contentInputRef.current?.blur();
-  }
+  };
 
-  const iconName: Ionicon = getIconName(canSave, isMutationInFlight);
+  const iconName: Ionicon = getIconName(editing, canSave, isMutationInFlight);
 
   return (
     <View style={styles.counter}>
@@ -117,40 +124,40 @@ export default function CounterComposer({ viewerId }: CounterComposerProps) {
           name={iconName}
           size={24}
           color="black"
-          onPress={handleSubmitUpdate}
+          onPress={editing ? handleSubmitUpdate : handleEdit}
         />
       </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   counter: {
-    flexDirection: 'row',
-    width: '100%',
-    alignItems: 'center',
+    flexDirection: "row",
+    width: "100%",
+    alignItems: "center",
     padding: 12,
-    backgroundColor: '#faf489',
+    backgroundColor: "#faf489",
   },
   counterTitle: {
     fontSize: 16,
-    minWidth: 150
+    minWidth: 150,
   },
   counterContent: {
     fontSize: 24,
     minWidth: 150,
-    textAlign: 'right'
+    textAlign: "right",
   },
   counterData: {
-    flexDirection: 'row',
+    flexDirection: "row",
     flexGrow: 1,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginRight: 16
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginRight: 16,
   },
   actions: {
     marginTop: 4,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  }
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
 });

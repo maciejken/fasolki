@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<99523f76bcec4ad09521d8873c205d3e>>
+ * @generated SignedSource<<cf4f782acd0082b940aaaf563dab1d6c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -51,7 +51,7 @@ v3 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 10
+    "value": 20
   }
 ];
 return {
@@ -214,7 +214,7 @@ return {
                     "storageKey": null
                   }
                 ],
-                "storageKey": "documents(first:10)"
+                "storageKey": "documents(first:20)"
               },
               {
                 "alias": null,
@@ -234,12 +234,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "2a6a67b56f86c08cce75cf9ef291acd3",
+    "cacheID": "b5649311cf3bccec1ad8b029672f5e51",
     "id": null,
     "metadata": {},
     "name": "DeleteDocumentMutation",
     "operationKind": "mutation",
-    "text": "mutation DeleteDocumentMutation(\n  $id: String!\n) {\n  deleteDocument(id: $id) {\n    viewer {\n      ...FasolkiViewerFragment\n      id\n    }\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment FasolkiViewerFragment on Viewer {\n  id\n  documents(first: 10) {\n    edges {\n      node {\n        ...CounterFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "mutation DeleteDocumentMutation(\n  $id: String!\n) {\n  deleteDocument(id: $id) {\n    viewer {\n      ...FasolkiViewerFragment\n      id\n    }\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment FasolkiViewerFragment on Viewer {\n  id\n  documents(first: 20) {\n    edges {\n      node {\n        ...CounterFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();

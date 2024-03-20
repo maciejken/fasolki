@@ -1,12 +1,3 @@
-type Person implements Node {
-  id: ID!
-  firstName: String
-  lastName: String
-  email: String
-  phone: String
-  documents: DocumentsConnection
-}
-
 interface Node {
   id: ID!
 }
@@ -55,7 +46,7 @@ type DocumentsConnectionEdge {
   cursor: String
 }
 
-# interface Group implements Node {
+# type Group implements Node {
 #   id: ID!
 #   name: String
 #   adminIds: [String]!

@@ -1,7 +1,7 @@
 {
   "name": "fasolki",
   "main": "expo-router/entry",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "scripts": {
     "start": "expo start",
     "start:dev": "expo start --dev-client",
@@ -10,7 +10,7 @@
     "web": "expo start --web",
     "test": "jest --watchAll",
     "relay": "relay-compiler",
-    "build": "eas build --platform android --profile preview",
+    "build": "yarn version && eas build --platform android --profile preview",
     "build:dev": "eas build --platform android --profile development"
   },
   "jest": {

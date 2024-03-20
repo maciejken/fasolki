@@ -54,11 +54,13 @@ export default function FasolkiView({
   const theme = useColorScheme();
   const styles = getStyles(theme);
 
+  const nodes = data?.documents?.edges?.map((edge) => edge?.node) || [];
+
   return (
     <View style={styles.screen}>
       <CounterComposer viewerId={data.id} />
       <FlatList
-        data={data?.documents?.edges?.map((edge) => edge?.node) || []}
+        data={nodes}
         renderItem={renderCounter}
         refreshControl={refreshControl}
         contentContainerStyle={styles.listContainer}

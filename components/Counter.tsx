@@ -1,13 +1,15 @@
 import React, { createRef, useContext, useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import Ionicons from '@expo/vector-icons/Ionicons';
+import { Pressable, StyleSheet, TextInput } from "react-native";
 import { graphql } from "relay-runtime";
 import { useFragment, useMutation } from "react-relay";
 
 import { CounterFragment$key } from "./__generated__/CounterFragment.graphql";
-import getCounterOptions from "./getCounterOptions";
+import { useCounterOptions } from "./useCounterOptions";
 import AppContext, { initialPickerState } from "@/appContext";
-import { Ionicon } from "./Icon";
+import Icon, { Ionicon } from "./Icon";
+import { Text, View } from "./Themed";
+import { ColorScheme, useColorScheme } from "./useColorScheme";
+import { useAppRouter } from "./useAppRouter";
 
 const CounterFragment = graphql`
   fragment CounterFragment on Document {
@@ -19,32 +21,19 @@ const CounterFragment = graphql`
   }
 `;
 
-const CounterMutation = graphql`
-  mutation CounterMutation(
-    $id: String!
-    $title: String
-    $content: String
-  ) {
-    updateDocument(
-      id: $id,
-      title: $title,
-      content: $content
-    ) {
-      viewer {
-        ...FasolkiViewerFragment
-      }
+const CounterUpdateFragment = graphql`
+  fragment CounterUpdateFragment on DocumentsConnectionEdge {
+    node {
+      ...CounterFragment
     }
   }
 `;
 
-const CounterDeleteMutation = graphql`
-  mutation CounterDeleteMutation(
-    $id: String!
-  ) {
-  deleteDocument(id: $id)
-    {
-      viewer {
-        ...FasolkiViewerFragment
+const CounterMutation = graphql`
+  mutation CounterMutation($id: String!, $title: String, $content: String) {
+    updateDocument(id: $id, title: $title, content: $content) {
+      documentEdge {
+        ...CounterUpdateFragment
       }
     }
   }
@@ -54,44 +43,51 @@ interface CounterProps {
   document: CounterFragment$key;
 }
 
-const getIconColor = (enabled: boolean) => enabled ? 'black' : 'white';
-
 const icons: Record<string, Ionicon> = {
   1: Ionicon.Lock,
   2: Ionicon.Pencil,
   3: Ionicon.Share,
   4: Ionicon.Dots,
-}
+};
 
-
-const getIconName = ({ accessLevel, canSave, isLoading }: {
-  accessLevel: number,
-  canSave: boolean,
-  isLoading: boolean,
+const getIconName = ({
+  accessLevel,
+  canSave,
+  isLoading,
+}: {
+  accessLevel: number;
+  canSave: boolean;
+  isLoading: boolean;
 }) => {
   if (isLoading) {
     return Ionicon.Time;
   }
   return canSave ? Ionicon.Save : icons[accessLevel.toString()];
-}
+};
 
-export default function Counter({
-  document,
-}: CounterProps) {
-  const { id, title, content, accessLevel, type } = useFragment(CounterFragment, document)
+export default function Counter({ document }: CounterProps) {
+  const { id, title, content, accessLevel, type } = useFragment(
+    CounterFragment,
+    document
+  );
   const [commitMutation, isUpdateInFlight] = useMutation(CounterMutation);
-  const [commitRemoval, isRemovalInFlight] = useMutation(CounterDeleteMutation);
   const [counterTitle, setCounterTitle] = useState(title || "");
   const [counterContent, setCounterContent] = useState(content);
   const [canSave, setCanSave] = React.useState(false);
-  const [canEdit, canShare, canDelete] = [1, 2, 3].map((level: number) => (accessLevel ?? 0) > level);
+  const [canEdit, canShare, canDelete] = [1, 2, 3].map(
+    (level: number) => (accessLevel ?? 0) > level
+  );
   const [titleFocused, setTitleFocused] = useState(false);
   const [contentFocused, setContentFocused] = useState(false);
   const { setPicker } = useContext(AppContext);
   const titleInputRef = createRef<TextInput>();
   const contentInputRef = createRef<TextInput>();
-  const isLoading = isUpdateInFlight || isRemovalInFlight;
+  const isLoading = isUpdateInFlight;
   const editing = titleFocused || contentFocused;
+  const { shareDocument } = useAppRouter();
+
+  const theme = useColorScheme();
+  const styles = getStyles(theme);
 
   const handlePressTitle = () => {
     if (canEdit) {
@@ -142,7 +138,7 @@ export default function Counter({
   const handleSubmitTitle = () => {
     contentInputRef.current?.focus();
     setContentFocused(true);
-  }
+  };
 
   const handleSubmitUpdate = () => {
     if (canSave) {
@@ -150,39 +146,32 @@ export default function Counter({
         variables: {
           id,
           title: counterTitle,
-          content: counterContent
-        }
-      })
+          content: counterContent,
+        },
+        optimisticResponse: {
+          updateDocument: {
+            documentEdge: {
+              node: {
+                id,
+                type,
+                title: counterTitle,
+                content: counterContent,
+                accessLevel,
+              },
+            },
+          },
+        },
+      });
       setCanSave(false);
       setContentFocused(false);
     }
   };
 
-  const handleDelete = () => {
-    if (canDelete) {
-      commitRemoval({
-        variables: { id }
-      });
-    }
-  };
-
   const handleShare = () => {
     if (canShare) {
-      console.warn("To be implemented");
-    }
-  }
-
-  const handleValueChange = (value: string) => {
-    const executePickerAction = pickerActions[value];
-    if ('function' === typeof executePickerAction) {
-      executePickerAction();
+      shareDocument({ id });
     }
   };
-
-  const pickerActions: Record<string, () => void> = {
-    share: handleShare,
-    delete: handleDelete,
-  }
 
   const handlePickerClose = () => {
     setPicker(initialPickerState);
@@ -196,9 +185,8 @@ export default function Counter({
 
     if (hasPicker) {
       setPicker({
-        items: getCounterOptions(),
+        items: useCounterOptions(id),
         prompt: title || id,
-        onChange: handleValueChange,
         onClose: handlePickerClose,
       });
     } else if (shouldSave) {
@@ -210,98 +198,109 @@ export default function Counter({
     }
   };
 
-  if (type !== 'counter') {
+  if (type !== "counter") {
     return null;
   }
 
   return (
     <View style={styles.counter}>
       <View style={styles.counterData}>
-        {!editing && <Pressable onPress={handlePressTitle}>
-          <Text style={styles.counterTitle}>{title}</Text>
-        </Pressable>}
-        {editing && <TextInput
-          ref={titleInputRef}
-          value={counterTitle}
-          style={styles.counterTitle}
-          editable={canEdit}
-          inputMode="text"
-          onChangeText={handleInputTitle}
-          onSubmitEditing={handleSubmitTitle}
-          enterKeyHint="next"
-          autoFocus={titleFocused}
-          onFocus={handleTitleFocus}
-          onBlur={handleTitleBlur}
-        />}
-        {!editing && <Pressable onPress={handlePressContent}>
-          <Text style={styles.counterContent}>{content}</Text>
-        </Pressable>}
-        {editing && <TextInput
-          ref={contentInputRef}
-          value={counterContent}
-          style={styles.counterContent}
-          editable={canEdit}
-          inputMode="numeric"
-          onChangeText={handleInputContent}
-          onSubmitEditing={handleSubmitUpdate}
-          enterKeyHint="done"
-          autoFocus={contentFocused}
-          onFocus={handleContentFocus}
-          onBlur={handleContentBlur}
-        />}
+        {!editing && (
+          <Pressable onPress={handlePressTitle}>
+            <Text style={styles.counterTitle}>{title}</Text>
+          </Pressable>
+        )}
+        {editing && (
+          <TextInput
+            ref={titleInputRef}
+            value={counterTitle}
+            style={[styles.counterTitle, styles.counterInput]}
+            editable={canEdit}
+            inputMode="text"
+            onChangeText={handleInputTitle}
+            onSubmitEditing={handleSubmitTitle}
+            enterKeyHint="next"
+            autoFocus={titleFocused}
+            onFocus={handleTitleFocus}
+            onBlur={handleTitleBlur}
+          />
+        )}
+        {!editing && (
+          <Pressable onPress={handlePressContent}>
+            <Text style={styles.counterContent}>{content}</Text>
+          </Pressable>
+        )}
+        {editing && (
+          <TextInput
+            ref={contentInputRef}
+            value={counterContent}
+            style={[styles.counterContent, styles.counterInput]}
+            editable={canEdit}
+            inputMode="numeric"
+            onChangeText={handleInputContent}
+            onSubmitEditing={handleSubmitUpdate}
+            enterKeyHint="done"
+            autoFocus={contentFocused}
+            onFocus={handleContentFocus}
+            onBlur={handleContentBlur}
+          />
+        )}
       </View>
       <View style={styles.actions}>
-        <Ionicons
+        <Icon
           name={getIconName({
             accessLevel: accessLevel || 0,
             canSave,
             isLoading,
           })}
           size={24}
-          color={canEdit ? 'black' : '#aaa'}
+          color={theme === "dark" ? "white" : "black"}
           onPress={handleActions}
         />
       </View>
     </View>
-  )
+  );
 }
 
-const styles = StyleSheet.create({
-  counter: {
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginVertical: 12,
-    paddingHorizontal: 12
-  },
-  counterTitle: {
-    fontSize: 16,
-    minWidth: 150,
-  },
-  counterContent: {
-    fontSize: 24,
-    minWidth: 150,
-    textAlign: 'right'
-  },
-  counterData: {
-    flexDirection: 'row',
-    flexGrow: 1,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginRight: 16
-  },
-  actions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 24,
-    marginTop: 2
-  },
-  picker: {
-    display: 'none'
-  },
-  iconContainer: {
-    top: 14,
-
-  }
-});
+const getStyles = (theme: ColorScheme) =>
+  StyleSheet.create({
+    counter: {
+      flexDirection: "row",
+      width: "100%",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginVertical: 12,
+      paddingHorizontal: 12,
+    },
+    counterTitle: {
+      fontSize: 16,
+      minWidth: 150,
+    },
+    counterContent: {
+      fontSize: 24,
+      minWidth: 150,
+      textAlign: "right",
+    },
+    counterInput: {
+      color: theme === "dark" ? "white" : "black",
+    },
+    counterData: {
+      flexDirection: "row",
+      flexGrow: 1,
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginRight: 16,
+    },
+    actions: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      width: 24,
+      marginTop: 2,
+    },
+    picker: {
+      display: "none",
+    },
+    iconContainer: {
+      top: 14,
+    },
+  });

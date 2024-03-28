@@ -1,12 +1,3 @@
-type Person implements Node {
-  id: ID!
-  firstName: String
-  lastName: String
-  email: String
-  phone: String
-  documents: DocumentsConnection
-}
-
 interface Node {
   id: ID!
 }
@@ -32,6 +23,7 @@ type Document implements Node {
   title: String
   content: String!
   accessLevel: Int
+  tags: [String]
   createdAt: String
   updatedAt: String
 }
@@ -54,7 +46,7 @@ type DocumentsConnectionEdge {
   cursor: String
 }
 
-# interface Group implements Node {
+# type Group implements Node {
 #   id: ID!
 #   name: String
 #   adminIds: [String]!
@@ -63,15 +55,22 @@ type DocumentsConnectionEdge {
 
 type Query {
   viewer: Viewer
+  document(id: String!): Document
+}
+
+input Permission {
+  key: String!
+  value: Int!
 }
 
 type Mutation {
-  addDocument(type: String!, title: String, content: String!): AddDocumentMutationResponse
-  updateDocument(id: String!, title: String, content: String): DocumentMutationResponse
+  addDocument(type: String!, title: String, content: String!): DocumentMutationResponseWithEdge
+  updateDocument(id: String!, title: String, content: String): DocumentMutationResponseWithEdge
+  updateDocumentPermissions(id: String!, permissions: [Permission]!): DocumentMutationResponse
   deleteDocument(id: String!): DocumentMutationResponse
 }
 
-type AddDocumentMutationResponse {
+type DocumentMutationResponseWithEdge {
   viewer: Viewer
   documentEdge: DocumentsConnectionEdge
 }

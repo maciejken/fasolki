@@ -1,34 +1,36 @@
-import { createRef, useContext } from "react";
-import { Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useContext } from "react";
+import { Modal, Pressable, StyleSheet } from "react-native";
+import { router } from 'expo-router';
+
 import Icon, { Ionicon } from "./Icon";
 import AppContext, { initialPickerState } from "@/appContext";
+import Button from "./Button";
+import { RouteTemplate, StaticRoute } from "@/appContext/types";
+import { Text, View } from "./Themed";
+import { ColorScheme, useColorScheme } from "./useColorScheme";
 
-interface PickerOption {
+export interface PickerOption {
   label: string;
-  value: string;
   icon: Ionicon;
+  action?: () => void;
 }
 
 export interface PickerProps {
   items: PickerOption[];
   prompt?: string;
+  desc?: string;
   onChange?: (value: string) => void;
   onClose?: (isValueChanged: boolean) => void;
 }
 
-export default function Picker({ items, prompt, onChange }: PickerProps) {
+export default function Picker({ items, prompt, desc }: PickerProps) {
   const { setPicker } = useContext(AppContext);
+  const theme = useColorScheme();
+  const styles = getStyles(theme);
 
   const handleClose = () => {
     setPicker(initialPickerState);
   }
-
-  const handleChange = (value: string) => {
-    if ('function' === typeof onChange) {
-      onChange(value);
-    }
-    handleClose();
-  };
 
   return (
     <Modal
@@ -39,54 +41,58 @@ export default function Picker({ items, prompt, onChange }: PickerProps) {
       <Pressable style={styles.overlay} onPress={handleClose}>
         <View style={styles.pickerContainer}>
           <View style={styles.pickerPrompt}>
-            <Text style={styles.pickerPromptText}>{prompt}</Text>
+            {prompt && <Text style={styles.pickerPromptText}>{prompt}</Text>}
+            {desc && <Text style={styles.pickerPromptDesc}>{desc}</Text>}
           </View>
 
-          {items.map((option) => (
-            <Pressable
-              key={`picker-item-${option.value}`}
-              style={styles.pickerItem}
-              onPress={() => handleChange(option.value)}
-            >
-              <Text style={styles.pickerItemText}>{option.label}</Text>
-              <Icon name={option.icon} style={styles.pickerItemIcon} />
-            </Pressable>
+          {items.map((option, index) => (
+            <Button
+              key={`picker-option-${index}`}
+              label={option.label}
+              icon={option.icon}
+              onPress={() => {
+                if ('function' === typeof option.action) {
+                  option.action();
+                }
+                handleClose();
+              }}
+              style={{ marginBottom: 16 }}
+            />
           ))}
 
-          <Icon name={Ionicon.Close} style={styles.pickerCloseIcon} />
+          <Icon
+            name={Ionicon.Close}
+            style={styles.pickerCloseIcon}
+            color={theme === 'dark' ? 'white' : 'black'}
+          />
         </View>
       </Pressable>
     </Modal>
   )
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: ColorScheme) => StyleSheet.create({
   overlay: {
     flex: 1,
     justifyContent: 'flex-end',
-    backgroundColor: 'rgba(0,0,0,0.5)'
+    backgroundColor: theme === 'dark' ? 'rgba(0,0,0,0.75)' : 'rgba(0,0,0,0.5)'
   },
   pickerContainer: {
-    backgroundColor: 'white',
     paddingBottom: 20,
     paddingHorizontal: 64,
   },
   pickerPrompt: {
     alignItems: 'center',
     padding: 16,
-    marginBottom: 16
+    marginBottom: 8
   },
   pickerPromptText: {
     fontSize: 22,
-    color: 'black'
   },
-  pickerItem: {
-    paddingVertical: 16,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 12,
-    backgroundColor: '#eee'
+  pickerPromptDesc: {
+    marginTop: 8,
+    fontSize: 12,
+    color: 'grey'
   },
   pickerItemText: {
     fontSize: 18

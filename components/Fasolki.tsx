@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
 import { graphql } from "relay-runtime";
 import { useLazyLoadQuery, useRelayEnvironment } from "react-relay";
-import type { FasolkiQuery as FasolkiQueryType } from './__generated__/FasolkiQuery.graphql';
+import type { FasolkiQuery as FasolkiQueryType } from "./__generated__/FasolkiQuery.graphql";
 import { fetchQuery } from "relay-runtime";
 import FasolkiView from "./FasolkiView";
 import LoadingSpinner from "./LoadingSpinner";
-import CustomPicker from './Picker';
-import AppContext from '@/appContext';
+import CustomPicker from "./Picker";
+import AppContext from "@/appContext";
 
 const FasolkiQuery = graphql`
   query FasolkiQuery {
@@ -25,7 +25,7 @@ export default function Fasolki() {
   let data = useLazyLoadQuery<FasolkiQueryType>(
     FasolkiQuery,
     {},
-    { fetchKey, fetchPolicy: 'network-only' }
+    { fetchKey, fetchPolicy: "store-or-network" }
   );
 
   const refresh = React.useCallback(() => {
@@ -35,26 +35,19 @@ export default function Fasolki() {
 
     setRefreshing(true);
 
-    fetchQuery(environment, FasolkiQuery, {})
-      .subscribe({
-        complete: () => {
-          setRefreshing(false);
-          setFetchKey(prev => prev + 1);
-        },
-        error: () => {
-          setRefreshing(false);
-        }
-      });
+    fetchQuery(environment, FasolkiQuery, {}).subscribe({
+      complete: () => {
+        setRefreshing(false);
+        setFetchKey((prev) => prev + 1);
+      },
+      error: () => {
+        setRefreshing(false);
+      },
+    });
   }, [fetchKey]);
 
-  React.useEffect(() => {
-    if (!fetchKey) {
-      refresh();
-    }
-  }, []);
-
   if (!data.viewer) {
-    return <LoadingSpinner />;
+    return null;
   }
 
   return (
@@ -66,6 +59,5 @@ export default function Fasolki() {
       />
       <CustomPicker {...picker} />
     </>
-
   );
 }

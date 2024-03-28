@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<26390f6aaad0fe1301aaa5f0545eacba>>
+ * @generated SignedSource<<82904d9b9aaebcdbeffe37bc08fef271>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -27,7 +27,7 @@ export type FasolkiPaginationQuery = {
 const node: ConcreteRequest = (function(){
 var v0 = [
   {
-    "defaultValue": 10,
+    "defaultValue": 20,
     "kind": "LocalArgument",
     "name": "count"
   },
@@ -225,16 +225,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b9a1851fc10a4733000a23a421824a54",
+    "cacheID": "f371c8f66efd64d2e1f88961ee884558",
     "id": null,
     "metadata": {},
     "name": "FasolkiPaginationQuery",
     "operationKind": "query",
-    "text": "query FasolkiPaginationQuery(\n  $count: Int = 10\n  $cursor: String\n) {\n  viewer {\n    ...FasolkiViewerFragment_1G22uz\n    id\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment FasolkiViewerFragment_1G22uz on Viewer {\n  id\n  documents(first: $count, after: $cursor) {\n    edges {\n      node {\n        ...CounterFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query FasolkiPaginationQuery(\n  $count: Int = 20\n  $cursor: String\n) {\n  viewer {\n    ...FasolkiViewerFragment_1G22uz\n    id\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment FasolkiViewerFragment_1G22uz on Viewer {\n  id\n  documents(first: $count, after: $cursor) {\n    edges {\n      node {\n        ...CounterFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "80a2f52c26549185925fbc3093c490b6";
+(node as any).hash = "a344da37ba1995ce8d62340cf28ed452";
 
 export default node;

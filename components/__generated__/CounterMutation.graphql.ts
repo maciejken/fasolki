@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ff63e67ebefd92e0beeeb16820dc3a05>>
+ * @generated SignedSource<<8dba3c462426009fb9eb087ba151725a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,8 +17,8 @@ export type CounterMutation$variables = {
 };
 export type CounterMutation$data = {
   readonly updateDocument: {
-    readonly viewer: {
-      readonly " $fragmentSpreads": FragmentRefs<"FasolkiViewerFragment">;
+    readonly documentEdge: {
+      readonly " $fragmentSpreads": FragmentRefs<"CounterUpdateFragment">;
     } | null | undefined;
   } | null | undefined;
 };
@@ -59,20 +59,6 @@ v3 = [
     "name": "title",
     "variableName": "title"
   }
-],
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v5 = [
-  {
-    "kind": "Literal",
-    "name": "first",
-    "value": 10
-  }
 ];
 return {
   "fragment": {
@@ -88,7 +74,7 @@ return {
       {
         "alias": null,
         "args": (v3/*: any*/),
-        "concreteType": "DocumentMutationResponse",
+        "concreteType": "DocumentMutationResponseWithEdge",
         "kind": "LinkedField",
         "name": "updateDocument",
         "plural": false,
@@ -96,15 +82,15 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "Viewer",
+            "concreteType": "DocumentsConnectionEdge",
             "kind": "LinkedField",
-            "name": "viewer",
+            "name": "documentEdge",
             "plural": false,
             "selections": [
               {
                 "args": null,
                 "kind": "FragmentSpread",
-                "name": "FasolkiViewerFragment"
+                "name": "CounterUpdateFragment"
               }
             ],
             "storageKey": null
@@ -129,7 +115,7 @@ return {
       {
         "alias": null,
         "args": (v3/*: any*/),
-        "concreteType": "DocumentMutationResponse",
+        "concreteType": "DocumentMutationResponseWithEdge",
         "kind": "LinkedField",
         "name": "updateDocument",
         "plural": false,
@@ -137,121 +123,56 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "Viewer",
+            "concreteType": "DocumentsConnectionEdge",
             "kind": "LinkedField",
-            "name": "viewer",
+            "name": "documentEdge",
             "plural": false,
             "selections": [
-              (v4/*: any*/),
               {
                 "alias": null,
-                "args": (v5/*: any*/),
-                "concreteType": "DocumentsConnection",
+                "args": null,
+                "concreteType": "Document",
                 "kind": "LinkedField",
-                "name": "documents",
+                "name": "node",
                 "plural": false,
                 "selections": [
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "DocumentsConnectionEdge",
-                    "kind": "LinkedField",
-                    "name": "edges",
-                    "plural": true,
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "Document",
-                        "kind": "LinkedField",
-                        "name": "node",
-                        "plural": false,
-                        "selections": [
-                          (v4/*: any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "type",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "title",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "content",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "accessLevel",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "__typename",
-                            "storageKey": null
-                          }
-                        ],
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "cursor",
-                        "storageKey": null
-                      }
-                    ],
+                    "kind": "ScalarField",
+                    "name": "id",
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "PageInfo",
-                    "kind": "LinkedField",
-                    "name": "pageInfo",
-                    "plural": false,
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "endCursor",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "hasNextPage",
-                        "storageKey": null
-                      }
-                    ],
+                    "kind": "ScalarField",
+                    "name": "type",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "title",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "content",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "accessLevel",
                     "storageKey": null
                   }
                 ],
-                "storageKey": "documents(first:10)"
-              },
-              {
-                "alias": null,
-                "args": (v5/*: any*/),
-                "filters": null,
-                "handle": "connection",
-                "key": "FasolkiViewerFragment_documents",
-                "kind": "LinkedHandle",
-                "name": "documents"
+                "storageKey": null
               }
             ],
             "storageKey": null
@@ -262,16 +183,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "55967f72f679ca137f1f0a097221878e",
+    "cacheID": "c63759279800dfe9b72a59370045fbbe",
     "id": null,
     "metadata": {},
     "name": "CounterMutation",
     "operationKind": "mutation",
-    "text": "mutation CounterMutation(\n  $id: String!\n  $title: String\n  $content: String\n) {\n  updateDocument(id: $id, title: $title, content: $content) {\n    viewer {\n      ...FasolkiViewerFragment\n      id\n    }\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment FasolkiViewerFragment on Viewer {\n  id\n  documents(first: 10) {\n    edges {\n      node {\n        ...CounterFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "mutation CounterMutation(\n  $id: String!\n  $title: String\n  $content: String\n) {\n  updateDocument(id: $id, title: $title, content: $content) {\n    documentEdge {\n      ...CounterUpdateFragment\n    }\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment CounterUpdateFragment on DocumentsConnectionEdge {\n  node {\n    ...CounterFragment\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c37dc1f2dd54fee8bb16713666e517d6";
+(node as any).hash = "abf4da09fbb81a3afd2daf6eb03c96b2";
 
 export default node;

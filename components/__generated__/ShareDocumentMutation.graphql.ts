@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<560afb7ba72a9ddbc0b5fcc4ca0dc129>>
+ * @generated SignedSource<<4d6dde3797c35e68bf8a3ea7fe0214d3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,19 +10,24 @@
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type CounterDeleteMutation$variables = {
-  id: string;
+export type Permission = {
+  key: string;
+  value: number;
 };
-export type CounterDeleteMutation$data = {
-  readonly deleteDocument: {
+export type ShareDocumentMutation$variables = {
+  id: string;
+  permissions: ReadonlyArray<Permission | null | undefined>;
+};
+export type ShareDocumentMutation$data = {
+  readonly updateDocumentPermissions: {
     readonly viewer: {
       readonly " $fragmentSpreads": FragmentRefs<"FasolkiViewerFragment">;
     } | null | undefined;
   } | null | undefined;
 };
-export type CounterDeleteMutation = {
-  response: CounterDeleteMutation$data;
-  variables: CounterDeleteMutation$variables;
+export type ShareDocumentMutation = {
+  response: ShareDocumentMutation$data;
+  variables: ShareDocumentMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -31,6 +36,11 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "id"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "permissions"
   }
 ],
 v1 = [
@@ -38,6 +48,11 @@ v1 = [
     "kind": "Variable",
     "name": "id",
     "variableName": "id"
+  },
+  {
+    "kind": "Variable",
+    "name": "permissions",
+    "variableName": "permissions"
   }
 ],
 v2 = {
@@ -51,7 +66,7 @@ v3 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 10
+    "value": 20
   }
 ];
 return {
@@ -59,14 +74,14 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "CounterDeleteMutation",
+    "name": "ShareDocumentMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
         "concreteType": "DocumentMutationResponse",
         "kind": "LinkedField",
-        "name": "deleteDocument",
+        "name": "updateDocumentPermissions",
         "plural": false,
         "selections": [
           {
@@ -96,14 +111,14 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "CounterDeleteMutation",
+    "name": "ShareDocumentMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
         "concreteType": "DocumentMutationResponse",
         "kind": "LinkedField",
-        "name": "deleteDocument",
+        "name": "updateDocumentPermissions",
         "plural": false,
         "selections": [
           {
@@ -214,7 +229,7 @@ return {
                     "storageKey": null
                   }
                 ],
-                "storageKey": "documents(first:10)"
+                "storageKey": "documents(first:20)"
               },
               {
                 "alias": null,
@@ -234,16 +249,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "fc418c8efba3d25791ee030fee55bb37",
+    "cacheID": "ddb5d55c111b8a4e3f3b64fd567db625",
     "id": null,
     "metadata": {},
-    "name": "CounterDeleteMutation",
+    "name": "ShareDocumentMutation",
     "operationKind": "mutation",
-    "text": "mutation CounterDeleteMutation(\n  $id: String!\n) {\n  deleteDocument(id: $id) {\n    viewer {\n      ...FasolkiViewerFragment\n      id\n    }\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment FasolkiViewerFragment on Viewer {\n  id\n  documents(first: 10) {\n    edges {\n      node {\n        ...CounterFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "mutation ShareDocumentMutation(\n  $id: String!\n  $permissions: [Permission]!\n) {\n  updateDocumentPermissions(id: $id, permissions: $permissions) {\n    viewer {\n      ...FasolkiViewerFragment\n      id\n    }\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment FasolkiViewerFragment on Viewer {\n  id\n  documents(first: 20) {\n    edges {\n      node {\n        ...CounterFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "cbd6d7cf2388c171d88424e8a95a02a9";
+(node as any).hash = "4659087063e3872ddc3966bcbd6289a8";
 
 export default node;

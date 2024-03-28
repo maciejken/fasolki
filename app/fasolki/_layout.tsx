@@ -1,17 +1,18 @@
-import React from 'react';
-import { StatusBar } from 'expo-status-bar';
+import React from "react";
+import { StatusBar } from "expo-status-bar";
+import { Slot } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import RelayEnvironment from '@/relay/RelayEnvironment';
-import Fasolki from '@/components/Fasolki';
-import LoadingSpinner from '@/components/LoadingSpinner';
+import RelayEnvironment from "@/relay/RelayEnvironment";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
-export default function FasolkiScreen() {
+export default function FasolkiLayout() {
   return (
     <RelayEnvironment>
       <StatusBar />
-      <React.Suspense fallback={<LoadingSpinner />}>
-        <Fasolki />
-      </React.Suspense>
+      <SafeAreaView style={{ flex: 1 }}>
+        <Slot />
+      </SafeAreaView>
     </RelayEnvironment>
   );
 }

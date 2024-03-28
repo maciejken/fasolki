@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fbc877d9688a2c0850a5659bea753c80>>
+ * @generated SignedSource<<ab1417d46d52d61b092754170f623c7e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -33,7 +33,7 @@ v1 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 10
+    "value": 20
   }
 ];
 return {
@@ -177,7 +177,7 @@ return {
                 "storageKey": null
               }
             ],
-            "storageKey": "documents(first:10)"
+            "storageKey": "documents(first:20)"
           },
           {
             "alias": null,
@@ -194,12 +194,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "935ee700a5c22b3521dea3aa9a9b0cac",
+    "cacheID": "09de0706d62f47fd199876ee76d1f165",
     "id": null,
     "metadata": {},
     "name": "FasolkiQuery",
     "operationKind": "query",
-    "text": "query FasolkiQuery {\n  viewer {\n    ...FasolkiViewerFragment\n    id\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment FasolkiViewerFragment on Viewer {\n  id\n  documents(first: 10) {\n    edges {\n      node {\n        ...CounterFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query FasolkiQuery {\n  viewer {\n    ...FasolkiViewerFragment\n    id\n  }\n}\n\nfragment CounterFragment on Document {\n  id\n  type\n  title\n  content\n  accessLevel\n}\n\nfragment FasolkiViewerFragment on Viewer {\n  id\n  documents(first: 20) {\n    edges {\n      node {\n        ...CounterFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();

@@ -4,12 +4,13 @@ import { FasolkiViewerFragment$key } from "./__generated__/FasolkiViewerFragment
 import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import Counter from "./Counter";
 import CounterComposer from "./CounterComposer";
+import { ColorScheme, useColorScheme } from "./useColorScheme";
 import { page } from "@/constants";
 
 const FasolkiViewerFragment = graphql`
   fragment FasolkiViewerFragment on Viewer
   @argumentDefinitions(
-    count: { type: "Int", defaultValue: 10 }
+    count: { type: "Int", defaultValue: 20 }
     cursor: { type: "String" }
   )
   @refetchable(queryName: "FasolkiPaginationQuery") {
@@ -50,11 +51,16 @@ export default function FasolkiView({
     <RefreshControl refreshing={refreshing} onRefresh={refresh} />
   );
 
+  const theme = useColorScheme();
+  const styles = getStyles(theme);
+
+  const nodes = data?.documents?.edges?.map((edge) => edge?.node) || [];
+
   return (
     <View style={styles.screen}>
       <CounterComposer viewerId={data.id} />
       <FlatList
-        data={data?.documents?.edges?.map((edge) => edge?.node) || []}
+        data={nodes}
         renderItem={renderCounter}
         refreshControl={refreshControl}
         contentContainerStyle={styles.listContainer}
@@ -65,30 +71,29 @@ export default function FasolkiView({
   );
 }
 
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    marginTop: 24,
-    backgroundColor: "white",
-    alignItems: "center",
-  },
-  listContainer: {
-    flexGrow: 1,
-  },
-  button: {
-    paddingVertical: 16,
-    marginVertical: 12,
-    width: 300,
-    backgroundColor: "#eee",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  buttonText: {
-    fontSize: 18,
-  },
-  icon: {
-    position: "absolute",
-    right: 24,
-  },
-});
+const getStyles = (theme: ColorScheme) =>
+  StyleSheet.create({
+    screen: {
+      flex: 1,
+    },
+    listContainer: {
+      flexGrow: 1,
+      backgroundColor: theme === "dark" ? "black" : "white",
+    },
+    button: {
+      paddingVertical: 16,
+      marginVertical: 12,
+      width: 300,
+      backgroundColor: "#eee",
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    buttonText: {
+      fontSize: 18,
+    },
+    icon: {
+      position: "absolute",
+      right: 24,
+    },
+  });

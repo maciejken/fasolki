@@ -1,14 +1,18 @@
 import * as Linking from 'expo-linking';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React, { useContext, useEffect } from 'react';
+import * as WebBrowser from 'expo-web-browser';
 
-import { ExternalLink } from '@/components/ExternalLink';
 import AppContext from '@/appContext';
-import Icon, { Ionicon } from '@/components/Icon';
+import { Ionicon } from '@/components/Icon';
+import Button from '@/components/Button';
+import { restoreToken, saveToken } from '@/appContext/secureStore';
+import { useAppRouter } from '@/components/useAppRouter';
 
 export default function WelcomeLayout() {
   const { setToken } = useContext(AppContext);
   const url = Linking.useURL();
+  const { goHome } = useAppRouter();
 
   useEffect(() => {
     if (url) {
@@ -17,25 +21,40 @@ export default function WelcomeLayout() {
 
       if ('string' === typeof token) {
         setToken(token);
+        saveToken(token);
       }
     }
   }, [url]);
 
+  useEffect(() => {
+    restoreToken().then((token: string | null) => {
+      if (token) {
+        setToken(token);
+        goHome();
+      }
+    });
+  }, []);
+
   return (
     <View style={styles.screen}>
-      <ExternalLink href={process.env.EXPO_PUBLIC_LOGIN_URL!} style={styles.externalLink}>
-        <View style={styles.button}>
-          <Icon name={Ionicon.Login} style={styles.icon} />
-          <Text style={styles.buttonText}>Logowanie</Text>
-        </View>
-      </ExternalLink>
+      <View style={styles.container}>
+        <Button
+          label="Logowanie"
+          icon={Ionicon.Login}
+          onPress={() => {
+            WebBrowser.openBrowserAsync(process.env.EXPO_PUBLIC_LOGIN_URL!);
+          }}
+          style={{ marginBottom: 24 }}
+        />
 
-      <ExternalLink href={process.env.EXPO_PUBLIC_SIGNUP_URL!}>
-        <View style={styles.button}>
-          <Icon name={Ionicon.Signup} style={styles.icon} />
-          <Text style={styles.buttonText}>Rejestracja</Text>
-        </View>
-      </ExternalLink>
+        <Button
+          label="Rejestracja"
+          icon={Ionicon.Signup}
+          onPress={() => {
+            WebBrowser.openBrowserAsync(process.env.EXPO_PUBLIC_SIGNUP_URL!)
+          }}
+        />
+      </View>
     </View>
   );
 };
@@ -46,23 +65,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  externalLink: {
-    marginBottom: 12
-  },
-  button: {
-    paddingVertical: 12,
-    marginVertical: 12,
-    width: 300,
-    backgroundColor: '#eee',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  icon: {
-    position: 'absolute',
-    right: 24
-  },
-  buttonText: {
-    fontSize: 24,
-  },
+  container: {
+    width: 300
+  }
 });

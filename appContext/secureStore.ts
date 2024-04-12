@@ -52,24 +52,48 @@ export async function saveToken(token: string): Promise<void> {
 function pemToUrlParamFormat(pem: string, del: string = "\n") {
   const lines = pem.split(del);
   const base64Lines = lines.filter(
-    (line) => !(line.startsWith("-----BEGIN") || line.startsWith("-----END"))
+    (line) => !(line?.includes("-----BEGIN") || line?.includes("-----END"))
   );
   return base64Lines.join("");
 }
 
 export async function generateKeys() {
   const keys = await RSA.generateKeys(rsaBits);
-  const publicKey = pemToUrlParamFormat(keys.public);
-  await Promise.all([
-    SecureStore.setItemAsync(rsaPrivateKeyKey, keys.private),
-    SecureStore.setItemAsync(rsaPublicKeyKey, publicKey),
+  let privateKey = "";
+  let publicKey = "";
+
+  if (keys?.private && keys?.public) {
+    publicKey = pemToUrlParamFormat(keys.public);
+    privateKey = pemToUrlParamFormat(keys.private);
+    console.log("private key:", privateKey);
+    console.log("public key:", publicKey);
+    await Promise.all([
+      SecureStore.setItemAsync(rsaPrivateKeyKey, privateKey),
+      SecureStore.setItemAsync(rsaPublicKeyKey, publicKey),
+    ]);
+  }
+
+  return { public: publicKey, private: privateKey };
+}
+
+async function getKeys() {
+  let [publicKey, privateKey] = await Promise.all([
+    SecureStore.getItemAsync(rsaPublicKeyKey),
+    SecureStore.getItemAsync(rsaPrivateKeyKey),
   ]);
-  return publicKey;
+
+  if (!publicKey) {
+    const keys = await generateKeys();
+    publicKey = keys.public;
+    privateKey = keys.private;
+  }
+
+  return { public: publicKey, private: privateKey };
 }
 
 export async function getPublicKey() {
-  const publicKey = await SecureStore.getItemAsync(rsaPublicKeyKey);
-  return publicKey || generateKeys();
+  const keys = await getKeys();
+  return keys.public;
 }
 
 export function getPrivateKey() {

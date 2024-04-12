@@ -1,28 +1,28 @@
 {
-    "cli": {
-      "version": ">= 5.1.0"
+  "cli": {
+    "version": ">= 5.1.0"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://flat-mouse-55.deno.dev/graf",
+        "EXPO_PUBLIC_LOGIN_URL": "https://strong-dove-79.deno.dev/login",
+        "EXPO_PUBLIC_SIGNUP_URL": "https://strong-dove-79.deno.dev/signup"
+      }
     },
-    "build": {
-      "development": {
-        "developmentClient": true,
-        "distribution": "internal",
-        "env": {
-          "EXPO_PUBLIC_API_URL": "https://flat-mouse-55.deno.dev/graf",
-          "EXPO_PUBLIC_LOGIN_URL": "https://strong-dove-79.deno.dev/login?mobile=true",
-          "EXPO_PUBLIC_SIGNUP_URL": "https://strong-dove-79.deno.dev/signup?mobile=true"       
-        }
-      },
-      "preview": {
-        "distribution": "internal",
-        "env": {
-          "EXPO_PUBLIC_API_URL": "https://flat-mouse-55.deno.dev/graf",
-          "EXPO_PUBLIC_LOGIN_URL": "https://strong-dove-79.deno.dev/login?mobile=true",
-          "EXPO_PUBLIC_SIGNUP_URL": "https://strong-dove-79.deno.dev/signup?mobile=true"       
-        }
-      },
-      "production": {}
+    "preview": {
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://fasolki-graf.deno.dev/graf",
+        "EXPO_PUBLIC_LOGIN_URL": "https://fasolki-web.deno.dev/login",
+        "EXPO_PUBLIC_SIGNUP_URL": "https://fasolki-web.deno.dev/signup"
+      }
     },
-    "submit": {
-      "production": {}
-    }
+    "production": {}
+  },
+  "submit": {
+    "production": {}
+  }
 }

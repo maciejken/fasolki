@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "fasolki-dev",
-    "slug": "fasolki",
+    "slug": "fasolki-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -23,7 +23,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.maciejken.fasolki",
+      "package": "dev.maciejken.fasolki",
       "intentFilters": [
         {
           "action": "VIEW",
@@ -59,7 +59,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "d8023d85-16a8-46f6-bed9-cac4ad1b65cc"
+        "projectId": "fb9961d7-c6d1-470c-9c67-cba4c5f12b9f"
       }
     }
   }

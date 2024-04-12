@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "fasolki",
-    "slug": "fasolki",
+    "name": "fasolki-dev",
+    "slug": "fasolki-dev",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -31,7 +31,7 @@
           "data": [
             {
               "scheme": "https",
-              "host": "strong-dove-79.deno.dev",
+              "host": "fasolki-web-dev.deno.dev",
               "pathPrefix": "/fasolki"
             }
           ],

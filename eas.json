@@ -7,9 +7,9 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://flat-mouse-55.deno.dev/graf",
-        "EXPO_PUBLIC_LOGIN_URL": "https://strong-dove-79.deno.dev/login",
-        "EXPO_PUBLIC_SIGNUP_URL": "https://strong-dove-79.deno.dev/signup"
+        "EXPO_PUBLIC_API_URL": "https://fasolki-graf-dev.deno.dev/graf",
+        "EXPO_PUBLIC_LOGIN_URL": "https://fasolki-web-dev.deno.dev/login",
+        "EXPO_PUBLIC_SIGNUP_URL": "https://fasolki-web-dev.deno.dev/signup"
       }
     },
     "preview": {

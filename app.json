@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "fasolki-dev",
-    "slug": "fasolki-dev",
+    "slug": "fasolki",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",

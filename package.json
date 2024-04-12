@@ -1,7 +1,7 @@
 {
   "name": "fasolki",
   "main": "expo-router/entry",
-  "version": "1.0.3-dev",
+  "version": "1.2.0-dev",
   "scripts": {
     "start": "expo start",
     "start:dev": "expo start --dev-client",

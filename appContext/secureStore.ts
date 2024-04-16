@@ -4,10 +4,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { RSA } from "react-native-rsa-native";
 
 import {
+  charLimit,
   genericTokenExpiryDateKey,
   genericTokenKey,
   rsaBits,
-  rsaPrivateKeyKey,
+  rsaPrivateKeyPart1Key,
+  rsaPrivateKeyPart2Key,
   rsaPublicKeyKey,
 } from "./constants";
 import { JwtPayload } from "./types";
@@ -65,10 +67,15 @@ export async function generateKeys() {
   if (keys?.private && keys?.public) {
     publicKey = pemToUrlParamFormat(keys.public);
     privateKey = pemToUrlParamFormat(keys.private);
-    console.log("private key:", privateKey);
-    console.log("public key:", publicKey);
     await Promise.all([
-      SecureStore.setItemAsync(rsaPrivateKeyKey, privateKey),
+      SecureStore.setItemAsync(
+        rsaPrivateKeyPart1Key,
+        privateKey.slice(0, charLimit)
+      ),
+      SecureStore.setItemAsync(
+        rsaPrivateKeyPart2Key,
+        privateKey.slice(charLimit)
+      ),
       SecureStore.setItemAsync(rsaPublicKeyKey, publicKey),
     ]);
   }
@@ -77,12 +84,18 @@ export async function generateKeys() {
 }
 
 async function getKeys() {
-  let [publicKey, privateKey] = await Promise.all([
+  let [publicKey, privateKeyPart1, privateKeyPart2] = await Promise.all([
     SecureStore.getItemAsync(rsaPublicKeyKey),
-    SecureStore.getItemAsync(rsaPrivateKeyKey),
+    SecureStore.getItemAsync(rsaPrivateKeyPart1Key),
+    SecureStore.getItemAsync(rsaPrivateKeyPart2Key),
   ]);
 
-  if (!publicKey) {
+  const hasPrivateKey = !!(privateKeyPart1 && privateKeyPart2);
+  let privateKey = "";
+
+  if (hasPrivateKey) {
+    privateKey = privateKeyPart1 + privateKeyPart2;
+  } else {
     const keys = await generateKeys();
     publicKey = keys.public;
     privateKey = keys.private;
@@ -93,15 +106,22 @@ async function getKeys() {
 
 export async function getPublicKey() {
   const keys = await getKeys();
-  return keys.public;
+  return keys.public || "";
 }
 
-export function getPrivateKey() {
-  return SecureStore.getItemAsync(rsaPrivateKeyKey);
+export async function getPrivateKey() {
+  const [privateKeyPart1, privateKeyPart2] = await Promise.all([
+    SecureStore.getItemAsync(rsaPrivateKeyPart1Key),
+    SecureStore.getItemAsync(rsaPrivateKeyPart2Key),
+  ]);
+
+  const hasPrivateKey = !!(privateKeyPart1 && privateKeyPart2);
+
+  return hasPrivateKey ? privateKeyPart1 + privateKeyPart2 : null;
 }
 
 export async function decrypt(value: string) {
-  const privateKey = await SecureStore.getItemAsync(rsaPrivateKeyKey);
+  const privateKey = await getPrivateKey();
   let decryptedValue = null;
 
   if (privateKey) {

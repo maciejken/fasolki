@@ -55,10 +55,11 @@ export default function WelcomeLayout() {
           label="Logowanie"
           icon={Ionicon.Login}
           onPress={async () => {
+            const publicKey = encodeURIComponent(await getPublicKey());
             const url = `${process.env
               .EXPO_PUBLIC_LOGIN_URL!}?${new URLSearchParams({
               mobile: "true",
-              publicKey: encodeURIComponent(await getPublicKey()),
+              publicKey,
             })}`;
             WebBrowser.openBrowserAsync(url);
           }}

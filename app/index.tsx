@@ -7,8 +7,6 @@ import AppContext from "@/appContext";
 import { Ionicon } from "@/components/Icon";
 import Button from "@/components/Button";
 import {
-  decrypt,
-  getPublicKey,
   restoreToken,
   saveToken,
 } from "@/appContext/secureStore";
@@ -25,16 +23,8 @@ export default function WelcomeLayout() {
       const token = queryParams?.token;
 
       if ("string" === typeof token) {
-        decrypt(token)
-          .then((decrypted) => {
-            if (decrypted) {
-              setToken(decrypted);
-              saveToken(decrypted);
-            }
-          })
-          .catch(() => {
-            console.error("Failed to decrypt token.");
-          });
+        setToken(token);
+        saveToken(token);
       }
     }
   }, [url]);
@@ -55,12 +45,10 @@ export default function WelcomeLayout() {
           label="Logowanie"
           icon={Ionicon.Login}
           onPress={async () => {
-            const publicKey = encodeURIComponent(await getPublicKey());
             const url = `${process.env
               .EXPO_PUBLIC_LOGIN_URL!}?${new URLSearchParams({
-              mobile: "true",
-              publicKey,
-            })}`;
+                mobile: "true",
+              })}`;
             WebBrowser.openBrowserAsync(url);
           }}
           style={{ marginBottom: 24 }}

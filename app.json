@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "fasolki-dev",
-    "slug": "fasolki-mobile",
+    "slug": "fasolki-dev",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -23,7 +23,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "dev.maciejken.fasolki",
+      "package": "com.maciejken.fasolki-dev",
       "intentFilters": [
         {
           "action": "VIEW",

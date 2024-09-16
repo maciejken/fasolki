@@ -23,7 +23,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.maciejken.fasolki-dev",
+      "package": "com.maciejken.fasolkidev",
       "intentFilters": [
         {
           "action": "VIEW",

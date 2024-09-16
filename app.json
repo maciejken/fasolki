@@ -33,6 +33,11 @@
               "scheme": "https",
               "host": "fasolki-web-dev.deno.dev",
               "pathPrefix": "/fasolki"
+            },
+            {
+              "scheme": "https",
+              "host": "maciejken.github.io",
+              "pathPrefix": "/fasolki"
             }
           ],
           "category": [
@@ -49,7 +54,8 @@
     },
     "plugins": [
       "expo-router",
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
